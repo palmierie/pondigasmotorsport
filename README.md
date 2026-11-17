@@ -1,4 +1,4 @@
-# Pondigas Motorsport
+# Pon Di Gas Motorsport
 
 Static team site (results, schedule, sponsors) published with GitHub Pages. No build step.
 
@@ -35,11 +35,9 @@ Without a `logo`, the name is shown as text.
 
 ## Placeholders to replace
 
-- Team name (header, footer, page titles): currently "Pondigas Motorsport"
 - Contact email `hello@example.com` (Sponsors and Contact pages)
 - Instagram/Facebook links in the footer and Contact page
 - Hero copy, "Who we are" text, team members, and all seed data in `data/`
-- Team logo: add to `assets/logos/` and swap it into the header brand link
 
 ## Publishing on a custom domain
 
