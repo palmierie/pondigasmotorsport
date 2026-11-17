@@ -60,11 +60,11 @@ body.scrolled .logo-on-paper { display: block; }
 .hero .container { padding-bottom: 12vh; }
 .hero h1 { font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: 1.02; margin: 0 0 16px; max-width: 14ch; }
 .hero p { font-size: 1.2rem; max-width: 52ch; margin: 0 0 28px; opacity: .95; }
-.page-banner { background: var(--bg-alt); padding: 140px 0 40px; }
-.page-banner h1 { margin: 0 0 8px; font-size: clamp(2rem, 5vw, 3rem); }
-.page-banner p { margin: 0; color: var(--muted); max-width: 60ch; }
+.page-head { padding: 170px 0 56px; border-bottom: 1px solid var(--ink); }
+.page-head h1 { margin: 0 0 12px; font-size: clamp(2.4rem, 6vw, 4.5rem); line-height: 1.02; }
+.page-head .lead { margin: 0; }
 
-.btn { display: inline-block; padding: 10px 18px; background: var(--green); color: #fff; text-decoration: none; border-radius: 0; font-family: var(--font-heading); font-weight: 600; font-size: 1.2rem; line-height: 1.3; }
+.btn { display: inline-block; padding: 10px 18px; background: var(--green); color: #fff; text-decoration: none; border-radius: 0; font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem; line-height: 1.3; }
 .btn:hover { background: #007f2f; }
 
 /* outlined box with square dots on all four corners (the Tekt "blueprint" look) */
@@ -80,18 +80,14 @@ body.scrolled .logo-on-paper { display: block; }
 /* sections */
 section.block { padding: 120px 0; }
 section.block + section.block { border-top: 1px solid var(--ink); }
-section.block.alt { background: var(--bg-alt); }
 section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
-.lead { font-size: 1.15rem; color: var(--muted); max-width: 62ch; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.lead { font-size: 1.15rem; max-width: 62ch; margin: 0 0 24px; }
 /* label left, content right */
 .split { display: grid; grid-template-columns: 1fr; gap: 24px; }
 .split > h2 { margin: 0; font-size: 1.5rem; }
 @media (min-width: 900px) { .split { grid-template-columns: 1fr 2.2fr; gap: 48px; } }
 
 /* rows, feature box and cells (schedule, results, sponsors) */
-.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
-.race-venue { margin: 0; color: var(--muted); }
 .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
 .row { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 1fr); gap: 4px 24px; align-items: baseline; padding: 18px 20px; }
 .row-photo { grid-column: 1 / -1; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 8px; }
@@ -113,7 +109,13 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
 .season { margin-bottom: 64px; }
 .season > h2 { margin: 0 0 20px; }
 
-/* team */
+/* team and contact */
+.team-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.team-card { padding: 20px; }
+.team-card h3 { margin: 0; font-size: 1.5rem; }
+.team-card p { margin: 0; }
+.contact-link { display: inline-block; padding: 14px 22px; font-family: var(--font-heading); font-weight: 600; font-size: 1.3rem; }
+.contact-link:hover { background: var(--ink); color: var(--page); }
 .photo-slot { aspect-ratio: 4/5; background: #d0dbe4; border-radius: 0; margin-bottom: 16px; overflow: hidden; }
 .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -134,11 +136,11 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
   .nav-open .nav { display: block; }
   .nav ul { flex-direction: column; gap: 14px; margin-top: 6px; }
   .nav a.box { --line-c: var(--ink); background: var(--page); color: var(--ink); }
-  .two-col, .footer-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
   .row { grid-template-columns: minmax(0, 1fr); }
   .row-meta, .row-notes { grid-column: auto; }
   section.block { padding: 64px 0; }
-  .fab { left: 16px; bottom: 16px; font-size: 1.1rem; padding: 8px 14px; }
+  .fab { left: 16px; bottom: 16px; padding: 8px 14px; }
 }
 }
 
@@ -149,4 +151,11 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
 /* no-js: keep the nav reachable and the header out of the way */
 .no-js .site-header .nav-toggle { display: none; }
 .no-js .nav { display: block; }
-.no-js .site-header { position: absolute; flex-wrap: wrap; }
+.no-js .site-header { position: relative; flex-wrap: wrap; background: var(--page); border-bottom: 1px solid var(--ink); }
+.no-js .site-header .box { --line-c: var(--ink); color: var(--ink); background: var(--page); }
+.no-js .nav a.box[aria-current="page"] { background: var(--ink); color: var(--page); }
+.no-js .nav { flex-basis: 100%; margin-left: 0; }
+.no-js .nav ul { flex-wrap: wrap; height: auto; }
+.no-js .logo-on-photo { display: none; }
+.no-js .logo-on-paper { display: block; }
+.no-js .page-head { padding-top: 56px; }
