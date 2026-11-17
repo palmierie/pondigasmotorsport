@@ -63,6 +63,8 @@ document.addEventListener(
     img.nextElementSibling?.classList.remove("visually-hidden");
     // A track logo tile with a broken image would be an empty dark square: hide the tile too.
     img.closest(".row-logo")?.setAttribute("hidden", "");
+    // ...and drop the extra grid column, or the row's text shifts one column left.
+    img.closest(".has-logo")?.classList.remove("has-logo");
   },
   true
 );
