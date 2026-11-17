@@ -55,6 +55,8 @@ def check_data(root):
                 problems.append(f"schedule.json races[{i}]: bad date {r['date']!r}")
             if r.get("time") and not re.fullmatch(r"([01]\d|2[0-3]):[0-5]\d", r["time"]):
                 problems.append(f"schedule.json races[{i}]: bad time {r['time']!r} (use 24-hour HH:MM)")
+            if r.get("logo") and not _file_exists_exact_case(root, r["logo"]):
+                problems.append(f"schedule.json races[{i}]: logo not found (case-sensitive) {r['logo']}")
             if r.get("endDate"):
                 e = _date(r["endDate"])
                 if not e:
