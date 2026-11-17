@@ -213,3 +213,12 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
   .feature.has-logo .row-logo { grid-row: auto; margin-bottom: 8px; }
   .feature.has-logo > span:not(.row-logo) { grid-column: 1; }
 }
+
+/* watch page */
+.watch-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+.watch-link { padding: 24px; display: grid; grid-template-rows: auto 1fr auto; gap: 10px; height: 100%; }
+.watch-name { font-family: var(--font-heading); font-weight: 700; font-size: 1.8rem; line-height: 1.1; overflow-wrap: anywhere; }
+.watch-desc { color: var(--muted); }
+.watch-cta { font-family: var(--font-heading); font-weight: 600; font-size: 1.2rem; margin-top: 6px; }
+.watch-link:hover { background: var(--ink); color: var(--page); }
+.watch-link:hover .watch-desc { color: var(--page); }

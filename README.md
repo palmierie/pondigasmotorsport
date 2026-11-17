@@ -33,6 +33,10 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 ```
 Without a `logo`, the name is shown as text.
 
+## Watch page
+
+`watch/index.html` has one card per YouTube channel (Foxxtecca, Apex Racing TV, Eric Palmieri). To add or change a channel, copy one `<li>` in the `watch-grid` list and edit its link, name and description. Keep `target="_blank" rel="noopener"` on external links; `scripts/check.py` reports any that are missing. The nav and footer link to `/watch/` on every page.
+
 ## League info
 
 `data/league.json` drives the league box at the top of the Schedule page. Every field except `name`/`season` is optional:
