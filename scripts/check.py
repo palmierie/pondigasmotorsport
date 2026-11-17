@@ -27,10 +27,20 @@ def _load(root, name, problems):
         return None
 
 
+def _https_problem(value, where):
+    """Watch links must be https URLs (never crash on odd values)."""
+    if value is None:
+        return []
+    if not isinstance(value, str) or not value.startswith("https://"):
+        return [f"{where} must start with https:// ({value!r})"]
+    return []
+
+
 def check_data(root):
     problems = []
     res = _load(root, "results.json", problems)
     if res is not None:
+        problems += _https_problem(res.get("watchUrl"), "results.json watchUrl")
         for si, s in enumerate(res.get("seasons", None) or []):
             if not isinstance(s.get("year"), int):
                 problems.append(f"results.json seasons[{si}]: year must be int")
@@ -42,12 +52,14 @@ def check_data(root):
                     problems.append(f"results.json seasons[{si}].races[{ri}]: bad date {r['date']!r}")
                 if r.get("logo") and not _file_exists_exact_case(root, r["logo"]):
                     problems.append(f"results.json seasons[{si}].races[{ri}]: logo not found (case-sensitive) {r['logo']}")
+                problems += _https_problem(r.get("watch"), f"results.json seasons[{si}].races[{ri}].watch")
         if "seasons" not in res:
             problems.append("results.json: missing 'seasons'")
     sch = _load(root, "schedule.json", problems)
     if sch is not None:
         if "races" not in sch:
             problems.append("schedule.json: missing 'races'")
+        problems += _https_problem(sch.get("watchUrl"), "schedule.json watchUrl")
         for i, r in enumerate(sch.get("races", [])):
             for k in ("event", "venue", "date"):
                 if not r.get(k):
@@ -59,6 +71,7 @@ def check_data(root):
                 problems.append(f"schedule.json races[{i}]: bad time {r['time']!r} (use 24-hour HH:MM)")
             if r.get("logo") and not _file_exists_exact_case(root, r["logo"]):
                 problems.append(f"schedule.json races[{i}]: logo not found (case-sensitive) {r['logo']}")
+            problems += _https_problem(r.get("watch"), f"schedule.json races[{i}].watch")
             if r.get("endDate"):
                 e = _date(r["endDate"])
                 if not e:
