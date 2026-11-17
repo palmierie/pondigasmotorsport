@@ -138,7 +138,7 @@ export function renderLeague(data) {
     (d.tagline ? `<p class="league-tagline">${e(d.tagline)}</p>` : "") +
     (facts.length ? `<dl class="facts">${facts.map((f) => `<div><dt>${e(f.label)}</dt><dd>${e(f.value)}</dd></div>`).join("")}</dl>` : "") +
     (timeline.length ? `<ol class="timeline">${timeline.map((t) => `<li><span>${e(t.label)}</span><span>${e(t.time)}${e(zone)}</span></li>`).join("")}</ol>` : "") +
-    (links.length ? `<p class="links">${links.map((l) => `<a class="${l.primary ? "btn" : "box"}" href="${e(l.url)}" rel="noopener">${e(l.label)}</a>`).join("")}</p>` : "") +
+    (links.length ? `<p class="links">${links.map((l) => `<a class="${l.primary ? "btn" : "box"}" href="${e(l.url)}" target="_blank" rel="noopener">${e(l.label)}<span class="visually-hidden"> (opens in a new tab)</span></a>`).join("")}</p>` : "") +
     (partners.length ? `<ul class="partners">${partners.map((p) => `<li>${p.role ? `<span class="partner-role">${e(p.role)}</span> ` : ""}${e(p.name)}</li>`).join("")}</ul>` : "") +
     (d.disclaimer ? `<p class="disclaimer">${e(d.disclaimer)}</p>` : "");
 
