@@ -122,6 +122,19 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
 .row.has-watch .row-meta, .row.has-watch .row-notes { grid-column: 2 / 4; }
 .row.has-logo.has-watch .row-meta, .row.has-logo.has-watch .row-notes { grid-column: 2 / 5; }
 .feature .row-watch { justify-self: start; margin-top: 12px; }
+
+/* tablets (721-1000px): tile | stacked text | button, so title and venue keep their width */
+@media (min-width: 721px) and (max-width: 1000px) {
+  .row.has-logo, .row.has-logo.has-watch { grid-template-columns: 112px minmax(0, 1fr) auto; align-items: center; }
+  .row.has-logo:not(.has-watch) { grid-template-columns: 112px minmax(0, 1fr); }
+  .row.has-watch:not(.has-logo) { grid-template-columns: minmax(0, 1fr) auto; }
+  .row.has-logo > .row-logo { grid-row: 1 / span 3; }
+  .row.has-logo > span:not(.row-logo):not(.row-watch) { grid-column: 2; }
+  .row.has-watch > .row-watch { grid-row: 1 / span 3; }
+  .row.has-logo.has-watch > .row-watch { grid-column: 3; }
+  .row.has-watch:not(.has-logo) > .row-watch { grid-column: 2; }
+  .row.has-watch:not(.has-logo) > span:not(.row-watch) { grid-column: 1; }
+}
 .cells { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
 .cell { display: flex; align-items: center; justify-content: center; min-height: 110px; text-align: center; }
 .cell img { max-height: 64px; width: auto; }
