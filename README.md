@@ -23,9 +23,9 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 
 **Add a race to the schedule** (`data/schedule.json`). Past races drop off automatically:
 ```json
-{ "event": "Round 4", "venue": "Sample Circuit", "date": "2027-09-04", "time": "18:00", "endDate": "2027-09-05", "link": "https://example.com" }
+{ "event": "Round 4", "venue": "Sample Circuit", "date": "2027-09-04", "time": "18:00", "endDate": "2027-09-05", "link": "https://example.com", "logo": "/assets/tracks/sample-circuit.webp" }
 ```
-`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate` and `link` are optional. A time zone and label are shown next to `time` only if the top of the file sets `timeZone` and `timeLabel` (see "League info" below).
+`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate`, `link` and `logo` are optional. `logo` is a track logo from `assets/tracks/`, shown in a dark square tile on the Schedule page and in the Next Race box (logos should be artwork made for dark backgrounds; `scripts/check.py` reports a missing or wrong-case file). A time zone and label are shown next to `time` only if the top of the file sets `timeZone` and `timeLabel` (see "League info" below).
 
 **Add a sponsor** (`data/sponsors.json`). Put the logo in `assets/logos/`:
 ```json
@@ -59,7 +59,7 @@ The race-day times came from https://foxxtecca.com/league, which has typos in it
 
 ### Credits
 
-The Foxxtecca and Apex Racing logos belong to their owners and are used to identify the league Pon Di Gas Motorsport races in. Pon Di Gas Motorsport is not affiliated with either company.
+The Foxxtecca and Apex Racing logos, and the track logos in `assets/tracks/`, belong to their owners (the league, its partners and the circuits) and are used to identify the league and venues Pon Di Gas Motorsport races at. Pon Di Gas Motorsport is not affiliated with either company.
 
 ## Styling
 
