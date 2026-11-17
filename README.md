@@ -25,7 +25,7 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 ```json
 { "event": "Round 4", "venue": "Sample Circuit", "date": "2027-09-04", "time": "18:00", "endDate": "2027-09-05", "link": "https://example.com" }
 ```
-`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate` and `link` are optional. No time zone is shown.
+`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate` and `link` are optional. A time zone and label are shown next to `time` only if the top of the file sets `timeZone` and `timeLabel` (see "League info" below).
 
 **Add a sponsor** (`data/sponsors.json`). Put the logo in `assets/logos/`:
 ```json
