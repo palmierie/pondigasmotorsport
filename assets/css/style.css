@@ -16,6 +16,7 @@
   --green: #009B3A;
   --black: #111111;
   --lion-red: #D80530;
+  --hero-img: url("/assets/photos/hero.jpg");
   --font-heading: "Rajdhani", var(--font);
 }
 * { box-sizing: border-box; }
@@ -39,7 +40,7 @@ h1, h2, h3, h4, .brand { font-family: var(--font-heading); }
 
 /* hero */
 .hero { position: relative; min-height: 70vh; display: flex; align-items: flex-end; color: #fff;
-  background: linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,.15)), var(--hero-img, linear-gradient(135deg, #2b2f36, #5a1220)) center/cover; }
+  background: linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.3)), var(--hero-img, linear-gradient(135deg, #2b2f36, #5a1220)) center 68%/cover; }
 .hero .container { padding-bottom: 72px; }
 .hero h1 { font-size: clamp(2.2rem, 6vw, 4rem); line-height: 1.1; margin: 0 0 16px; max-width: 14ch; }
 .hero p { font-size: 1.2rem; max-width: 52ch; margin: 0 0 28px; opacity: .92; }
