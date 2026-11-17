@@ -97,7 +97,7 @@ export function renderLatestResult(data) {
   const all = (data.seasons || []).flatMap((s) => s.races || []);
   if (!all.length) return empty("No results yet.");
   const latest = all.reduce((a, b) => (parseDate(b.date) > parseDate(a.date) ? b : a));
-  return feature(latest, { result: true });
+  return feature(latest, { result: true, logo: true });
 }
 
 export function renderSponsors(data) {

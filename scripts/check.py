@@ -40,6 +40,8 @@ def check_data(root):
                         problems.append(f"results.json seasons[{si}].races[{ri}]: missing {k}")
                 if r.get("date") and not _date(r["date"]):
                     problems.append(f"results.json seasons[{si}].races[{ri}]: bad date {r['date']!r}")
+                if r.get("logo") and not _file_exists_exact_case(root, r["logo"]):
+                    problems.append(f"results.json seasons[{si}].races[{ri}]: logo not found (case-sensitive) {r['logo']}")
         if "seasons" not in res:
             problems.append("results.json: missing 'seasons'")
     sch = _load(root, "schedule.json", problems)
