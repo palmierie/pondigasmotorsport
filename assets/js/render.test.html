@@ -14,6 +14,23 @@ const eq = (a, b) => { if (a !== b) throw new Error(`expected ${JSON.stringify(b
 const ok = (c, m) => { if (!c) throw new Error(m); };
 const d = (s) => new Date(s + "T12:00:00");
 
+t("schedule shows start time as 12-hour clock", () => {
+  const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "18:00" }] }, d("2027-01-01"));
+  ok(h.includes("6:00 PM"), h);
+});
+t("noon and midnight format correctly", () => {
+  const n = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "12:30" }] }, d("2027-01-01"));
+  const m = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "00:05" }] }, d("2027-01-01"));
+  ok(n.includes("12:30 PM") && m.includes("12:05 AM"), n + m);
+});
+t("schedule without time shows no time", () => {
+  const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-01-05" }] }, d("2027-01-01"));
+  ok(!h.includes("AM") && !h.includes("PM") && !h.includes("undefined"), h);
+});
+t("dates show weekday in US style", () => {
+  const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2026-11-24" }] }, d("2026-11-01"));
+  ok(h.includes("Tue, Nov 24, 2026"), h);
+});
 t("empty results shows message", () => ok(R.renderResults({ seasons: [] }).includes("No results yet."), "no msg"));
 t("empty schedule shows message", () => ok(R.renderSchedule({ races: [] }, d("2027-01-01")).includes("No upcoming races."), "no msg"));
 t("race today is upcoming", () => ok(R.renderSchedule({ races: [{ event: "Today", venue: "V", date: "2027-01-01" }] }, d("2027-01-01")).includes("Today"), "missing"));

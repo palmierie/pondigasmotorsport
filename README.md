@@ -23,9 +23,9 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 
 **Add a race to the schedule** (`data/schedule.json`). Past races drop off automatically:
 ```json
-{ "event": "Round 4", "venue": "Sample Circuit", "date": "2027-09-04", "endDate": "2027-09-05", "link": "https://example.com" }
+{ "event": "Round 4", "venue": "Sample Circuit", "date": "2027-09-04", "time": "18:00", "endDate": "2027-09-05", "link": "https://example.com" }
 ```
-`endDate` and `link` are optional.
+`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate` and `link` are optional. No time zone is shown.
 
 **Add a sponsor** (`data/sponsors.json`). Put the logo in `assets/logos/`:
 ```json

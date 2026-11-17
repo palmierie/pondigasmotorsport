@@ -21,7 +21,15 @@ function startOfDay(d) {
 }
 
 function formatDate(s) {
-  return parseDate(s).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
+  return parseDate(s).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+}
+
+// "18:00" -> "6:00 PM"
+function formatTime(t) {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(t || "");
+  if (!m) return "";
+  const h = Number(m[1]);
+  return `${h % 12 || 12}:${m[2]} ${h < 12 ? "AM" : "PM"}`;
 }
 
 function formatRange(r) {
@@ -40,7 +48,7 @@ function raceCard(r) {
   const title = r.link
     ? `<a href="${e(r.link)}" rel="noopener">${e(r.event)}</a>`
     : e(r.event);
-  return `<article class="card race"><p class="race-date">${e(formatRange(r))}</p><h3>${title}</h3><p class="race-venue">${e(r.venue)}</p></article>`;
+  return `<article class="card race"><p class="race-date">${e([formatRange(r), formatTime(r.time)].filter(Boolean).join(" · "))}</p><h3>${title}</h3><p class="race-venue">${e(r.venue)}</p></article>`;
 }
 
 function resultCard(r) {
