@@ -1,0 +1,91 @@
+{
+  "name": "The League",
+  "season": "Season 04",
+  "presentedBy": "Presented by Foxxtecca",
+  "tagline": "Esports for the Culture. A global iRacing series run on U.S. time zones. Eric Palmieri races in the Pro-AM division.",
+  "facts": [
+    {
+      "label": "Class",
+      "value": "GT3"
+    },
+    {
+      "label": "Division",
+      "value": "Pro-AM"
+    },
+    {
+      "label": "Rounds",
+      "value": "8, every Tuesday"
+    },
+    {
+      "label": "Season",
+      "value": "04"
+    },
+    {
+      "label": "Prize pool",
+      "value": "$6,800"
+    }
+  ],
+  "timeline": [
+    {
+      "label": "Practice",
+      "time": "6:00 PM"
+    },
+    {
+      "label": "Qualifying",
+      "time": "7:00 PM"
+    },
+    {
+      "label": "Race",
+      "time": "7:10 PM"
+    },
+    {
+      "label": "Broadcast",
+      "time": "7:00 PM - 10:00 PM"
+    }
+  ],
+  "timeZone": "ET",
+  "links": [
+    {
+      "label": "Watch live",
+      "url": "https://www.youtube.com/@FoxxteccaStudios",
+      "primary": true
+    },
+    {
+      "label": "League site",
+      "url": "https://foxxtecca.com/league"
+    },
+    {
+      "label": "League Discord",
+      "url": "https://discord.com/invite/kPXwQfwpdQ"
+    }
+  ],
+  "partners": [
+    {
+      "role": "Broadcast",
+      "name": "Apex Racing TV"
+    },
+    {
+      "role": "Liveries",
+      "name": "Dakin Design"
+    },
+    {
+      "role": "Sim center",
+      "name": "Superlap"
+    },
+    {
+      "role": "Fuel",
+      "name": "The Roasted Record"
+    }
+  ],
+  "logos": [
+    {
+      "name": "Foxxtecca",
+      "src": "/assets/logos/foxxtecca-logo.webp"
+    },
+    {
+      "name": "Apex Racing",
+      "src": "/assets/logos/apex-racing-logo.webp"
+    }
+  ],
+  "disclaimer": "Pon Di Gas Motorsport is not affiliated with Foxxtecca or Apex Racing. Logos belong to their owners."
+}
