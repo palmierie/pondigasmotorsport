@@ -58,9 +58,13 @@ t("results rows never get a tile", () => {
   const h = R.renderResults({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01", logo: LG }] }] });
   ok(!h.includes("row-logo") && !h.includes("has-logo"), h);
 });
-t("latest result never gets a tile", () => {
+t("latest result shows the logo tile when it has a logo", () => {
   const h = R.renderLatestResult({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01", logo: LG }] }] });
-  ok(!h.includes("row-logo") && !h.includes("has-logo"), h);
+  ok(h.includes('class="box feature has-logo"') && h.includes('<span class="row-logo"><img src="' + LG + '" alt="" data-logo></span>'), h);
+});
+t("latest result without a logo renders no tile", () => {
+  const h = R.renderLatestResult({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01" }] }] });
+  ok(!h.includes("row-logo") && !h.includes("has-logo") && !h.includes("undefined"), h);
 });
 t("schedule row shows label, time and zone", () => {
   const h = R.renderSchedule({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "19:10" }] }, d("2027-01-01"));

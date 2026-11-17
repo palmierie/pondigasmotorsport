@@ -8,7 +8,8 @@
           "venue": "Road Atlanta",
           "date": "2026-11-24",
           "class": "GT3 Pro-AM",
-          "position": "Upcoming"
+          "position": "Upcoming",
+          "logo": "/assets/tracks/road-atlanta.webp"
         }
       ]
     }
