@@ -1,7 +1,52 @@
 {
   "races": [
-    { "event": "Round 1 (placeholder)", "venue": "Example Raceway", "date": "2027-03-13", "endDate": "2027-03-14" },
-    { "event": "Round 2 (placeholder)", "venue": "Sample Circuit", "date": "2027-05-08" },
-    { "event": "Round 3 (placeholder)", "venue": "Demo Park", "date": "2027-07-17", "link": "https://example.com" }
+    {
+      "event": "Round 1",
+      "venue": "Road Atlanta",
+      "date": "2026-11-24",
+      "time": "18:00"
+    },
+    {
+      "event": "Round 2",
+      "venue": "Mid Ohio",
+      "date": "2026-12-01",
+      "time": "18:00"
+    },
+    {
+      "event": "Round 3",
+      "venue": "Monza",
+      "date": "2026-12-08",
+      "time": "18:00"
+    },
+    {
+      "event": "Round 4",
+      "venue": "Nurburgring",
+      "date": "2026-12-15",
+      "time": "18:00"
+    },
+    {
+      "event": "Round 5",
+      "venue": "Sonoma",
+      "date": "2027-01-05",
+      "time": "18:00"
+    },
+    {
+      "event": "Round 6",
+      "venue": "Brands Hatch",
+      "date": "2027-01-12",
+      "time": "18:00"
+    },
+    {
+      "event": "Round 7",
+      "venue": "Daytona",
+      "date": "2027-01-19",
+      "time": "18:00"
+    },
+    {
+      "event": "Round 8",
+      "venue": "Watkins Glen",
+      "date": "2027-01-26",
+      "time": "18:00"
+    }
   ]
 }
