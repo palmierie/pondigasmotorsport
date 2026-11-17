@@ -44,18 +44,23 @@ function upcoming(data, today) {
     .sort((a, b) => parseDate(a.date) - parseDate(b.date));
 }
 
-function raceCard(r) {
-  const title = r.link
-    ? `<a href="${e(r.link)}" rel="noopener">${e(r.event)}</a>`
-    : e(r.event);
-  return `<article class="card race"><p class="race-date">${e([formatRange(r), formatTime(r.time)].filter(Boolean).join(" · "))}</p><h3>${title}</h3><p class="race-venue">${e(r.venue)}</p></article>`;
+// Inner spans shared by schedule rows, result rows and feature boxes.
+function raceSpans(r, { result = false } = {}) {
+  const dateText = result ? formatDate(r.date) : [formatRange(r), formatTime(r.time)].filter(Boolean).join(" · ");
+  const title = r.link ? `<a href="${e(r.link)}" rel="noopener">${e(r.event)}</a>` : e(r.event);
+  const meta = [r.class, r.position].filter(Boolean).map(e).join(" · ");
+  return (
+    (r.photo ? `<img class="row-photo" src="${e(r.photo)}" alt="${e(r.event)}" loading="lazy">` : "") +
+    `<span class="row-date">${e(dateText)}</span>` +
+    `<span class="row-title">${title}</span>` +
+    `<span class="row-venue">${e(r.venue)}</span>` +
+    (meta ? `<span class="row-meta">${meta}</span>` : "") +
+    (r.notes ? `<span class="row-notes">${e(r.notes)}</span>` : "")
+  );
 }
 
-function resultCard(r) {
-  const meta = [r.class, r.position].filter(Boolean).map(e).join(" · ");
-  const photo = r.photo ? `<img src="${e(r.photo)}" alt="${e(r.event)}" loading="lazy">` : "";
-  return `<article class="card race">${photo}<p class="race-date">${e(formatDate(r.date))}</p><h3>${e(r.event)}</h3><p class="race-venue">${e(r.venue)}</p>${meta ? `<p class="race-meta">${meta}</p>` : ""}${r.notes ? `<p class="race-notes">${e(r.notes)}</p>` : ""}</article>`;
-}
+const row = (r, opts) => `<li class="row box">${raceSpans(r, opts)}</li>`;
+const feature = (r, opts) => `<div class="box feature">${raceSpans(r, opts)}</div>`;
 
 export function renderResults(data) {
   const seasons = [...(data.seasons || [])].sort((a, b) => b.year - a.year);
@@ -63,7 +68,7 @@ export function renderResults(data) {
   return seasons
     .map((s) => {
       const races = [...(s.races || [])].sort((a, b) => parseDate(b.date) - parseDate(a.date));
-      const body = races.length ? `<div class="card-grid">${races.map(resultCard).join("")}</div>` : empty("No results yet.");
+      const body = races.length ? `<ol class="rows">${races.map((r) => row(r, { result: true })).join("")}</ol>` : empty("No results yet.");
       return `<section class="season"><h2>${e(s.year)}</h2>${body}</section>`;
     })
     .join("");
@@ -72,20 +77,20 @@ export function renderResults(data) {
 export function renderSchedule(data, today) {
   const races = upcoming(data, today);
   if (!races.length) return empty("No upcoming races.");
-  return `<div class="card-grid">${races.map(raceCard).join("")}</div>`;
+  return `<ol class="rows">${races.map((r) => row(r)).join("")}</ol>`;
 }
 
 export function renderNextRace(data, today) {
   const [next] = upcoming(data, today);
   if (!next) return empty("No upcoming races.");
-  return raceCard(next);
+  return feature(next);
 }
 
 export function renderLatestResult(data) {
   const all = (data.seasons || []).flatMap((s) => s.races || []);
   if (!all.length) return empty("No results yet.");
   const latest = all.reduce((a, b) => (parseDate(b.date) > parseDate(a.date) ? b : a));
-  return resultCard(latest);
+  return feature(latest, { result: true });
 }
 
 export function renderSponsors(data) {
@@ -97,7 +102,7 @@ export function renderSponsors(data) {
       ? `<img src="${e(s.logo)}" alt="${e(s.name)}" loading="lazy" data-logo><span class="sponsor-name visually-hidden">${e(s.name)}</span>`
       : `<span class="sponsor-name">${e(s.name)}</span>`;
     const body = s.url ? `<a href="${e(s.url)}" rel="noopener">${inner}</a>` : inner;
-    return `<div class="sponsor">${body}</div>`;
+    return `<li class="cell box">${body}</li>`;
   });
-  return `<div class="sponsor-grid">${items.join("")}</div>`;
+  return `<ul class="cells">${items.join("")}</ul>`;
 }

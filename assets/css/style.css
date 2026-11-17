@@ -89,23 +89,29 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
 .split > h2 { margin: 0; font-size: 1.5rem; }
 @media (min-width: 900px) { .split { grid-template-columns: 1fr 2.2fr; gap: 48px; } }
 
-/* cards */
+/* rows, feature box and cells (schedule, results, sponsors) */
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
-.card { background: transparent; border: 1px solid var(--line); border-radius: 0; padding: 24px; overflow: hidden; }
-.card img { margin: -24px -24px 16px; width: calc(100% + 48px); max-width: none; aspect-ratio: 16/9; object-fit: cover; }
-.card h3 { margin: 4px 0; font-size: 1.15rem; }
-.race-date { margin: 0; color: var(--accent); font-weight: 600; font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; }
-.race-venue, .race-notes { margin: 0; color: var(--muted); }
-.race-meta { margin: 8px 0 0; font-weight: 600; }
-.empty { color: var(--muted); font-style: italic; padding: 16px 0; }
-.season { margin-bottom: 48px; }
-
-/* sponsors */
-.sponsor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 24px; align-items: center; }
-.sponsor { display: flex; align-items: center; justify-content: center; min-height: 100px; padding: 16px; border: 1px solid var(--line); border-radius: 0; background: transparent; }
-.sponsor img { max-height: 64px; width: auto; }
-.sponsor a { text-decoration: none; }
-.sponsor-name { font-weight: 700; color: var(--muted); text-align: center; }
+.race-venue { margin: 0; color: var(--muted); }
+.rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.row { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 1fr); gap: 4px 24px; align-items: baseline; padding: 18px 20px; }
+.row-photo { grid-column: 1 / -1; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: 8px; }
+.row-date { font-family: var(--font-heading); font-weight: 600; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .05em; }
+.row-title { font-family: var(--font-heading); font-weight: 700; font-size: 1.4rem; line-height: 1.15; overflow-wrap: anywhere; }
+.row-venue { overflow-wrap: anywhere; }
+.row-meta { grid-column: 2 / -1; font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; }
+.row-notes { grid-column: 2 / -1; color: var(--muted); }
+.feature { padding: 24px; display: grid; gap: 4px; }
+.feature .row-date { color: var(--lion-red); }
+.feature .row-title { font-size: 1.9rem; }
+.feature .row-photo { margin: -8px 0 8px; }
+.cells { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+.cell { display: flex; align-items: center; justify-content: center; min-height: 110px; text-align: center; }
+.cell img { max-height: 64px; width: auto; }
+.cell a { text-decoration: none; display: block; }
+.sponsor-name { font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem; }
+.empty { padding: 18px 20px; border: 1px dashed var(--ink); color: var(--muted); margin: 0; }
+.season { margin-bottom: 64px; }
+.season > h2 { margin: 0 0 20px; }
 
 /* team */
 .photo-slot { aspect-ratio: 4/5; background: #d0dbe4; border-radius: 0; margin-bottom: 16px; overflow: hidden; }
@@ -129,6 +135,8 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
   .nav ul { flex-direction: column; gap: 14px; margin-top: 6px; }
   .nav a.box { --line-c: var(--ink); background: var(--page); color: var(--ink); }
   .two-col, .footer-grid { grid-template-columns: 1fr; }
+  .row { grid-template-columns: minmax(0, 1fr); }
+  .row-meta, .row-notes { grid-column: auto; }
   section.block { padding: 64px 0; }
   .fab { left: 16px; bottom: 16px; font-size: 1.1rem; padding: 8px 14px; }
 }
