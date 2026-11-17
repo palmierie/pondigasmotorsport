@@ -38,6 +38,9 @@ h1, h2, h3, h4, .brand { font-family: var(--font-heading); }
 .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; align-items: stretch; gap: 12px; padding: 20px 24px; }
 .site-header .box { --line-c: var(--on-photo); color: var(--on-photo); background: transparent; }
 .brand { display: flex; align-items: center; flex-shrink: 0; padding: 8px 14px; }
+/* the logo stands on its own: no outline, dots or fill (it is still a link with a focus ring) */
+.site-header .brand, body.scrolled .site-header .brand, .no-js .site-header .brand { border: 0; padding: 4px 0; background: transparent; }
+.site-header .brand::before { display: none; }
 .brand img { height: 44px; width: auto; }
 .logo-on-paper { display: none; }
 .nav { margin-left: auto; }
