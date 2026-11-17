@@ -14,6 +14,36 @@ const eq = (a, b) => { if (a !== b) throw new Error(`expected ${JSON.stringify(b
 const ok = (c, m) => { if (!c) throw new Error(m); };
 const d = (s) => new Date(s + "T12:00:00");
 
+const L = { name: "The League", season: "Season 04", presentedBy: "Presented by Foxxtecca", tagline: "Tagline here", facts: [{ label: "Class", value: "GT3" }], timeline: [{ label: "Race", time: "7:10 PM" }], timeZone: "ET", links: [{ label: "Watch live", url: "https://y.com", primary: true }, { label: "Site", url: "https://s.com" }], partners: [{ role: "Broadcast", name: "Apex" }], logos: [{ name: "Foxx", src: "/a.webp" }], disclaimer: "Not affiliated." };
+t("league renders name and season", () => { const h = R.renderLeague(L); ok(h.includes("The League") && h.includes("Season 04"), h); });
+t("league facts render as definition list", () => { const h = R.renderLeague(L); ok(h.includes('<dl class="facts">') && h.includes("<dt>Class</dt><dd>GT3</dd>"), h); });
+t("league timeline appends the time zone", () => ok(R.renderLeague(L).includes("7:10 PM ET"), "no zone"));
+t("league omits timeline when absent", () => { const { timeline, ...rest } = L; ok(!R.renderLeague(rest).includes("timeline"), "present"); });
+t("league escapes html in text", () => { const h = R.renderLeague({ ...L, name: "<b>x</b>" }); ok(!h.includes("<b>x"), h); });
+t("league skips links with non-https urls", () => {
+  const h = R.renderLeague({ ...L, links: [{ label: "Bad", url: "javascript:alert(1)" }, { label: "Worse", url: "www.x.com" }, { label: "Good", url: "https://g.com" }] });
+  ok(!h.includes("javascript") && !h.includes("www.x.com") && !h.includes(">Bad<") && h.includes('href="https://g.com"'), h);
+});
+t("league primary link is a green button", () => ok(R.renderLeague(L).includes('<a class="btn" href="https://y.com" rel="noopener">Watch live</a>'), "no btn"));
+t("league logo has name fallback text", () => { const h = R.renderLeague(L); ok(h.includes("data-logo") && h.includes('class="visually-hidden">Foxx<'), h); });
+t("league with only name and season renders without undefined", () => { const h = R.renderLeague({ name: "N", season: "S" }); ok(h.includes("N") && !h.includes("undefined") && !h.includes("null") && !h.includes("<dl") && !h.includes("<ol"), h); });
+t("empty league object renders nothing", () => eq(R.renderLeague({}), ""));
+t("schedule row shows label, time and zone", () => {
+  const h = R.renderSchedule({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "19:10" }] }, d("2027-01-01"));
+  ok(h.includes("Tue, Jan 5, 2027 · Race 7:10 PM ET"), h);
+});
+t("time without label or zone shows only the time", () => {
+  const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "18:00" }] }, d("2027-01-01"));
+  ok(h.includes("· 6:00 PM<") && !h.includes("ET") && !h.includes("Race"), h);
+});
+t("zone without a round time shows no zone or label", () => {
+  const h = R.renderSchedule({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05" }] }, d("2027-01-01"));
+  ok(!h.includes("ET") && !h.includes("Race") && !h.includes("undefined"), h);
+});
+t("next race feature shows label, time and zone", () => {
+  const h = R.renderNextRace({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "19:10" }] }, d("2027-01-01"));
+  ok(h.includes("Race 7:10 PM ET"), h);
+});
 t("schedule renders an ordered list of rows", () => {
   const h = R.renderSchedule({ races: [{ event: "A", venue: "V", date: "2027-02-01" }, { event: "B", venue: "V", date: "2027-03-01" }] }, d("2027-01-01"));
   ok(h.includes('<ol class="rows">'), h);

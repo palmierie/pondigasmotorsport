@@ -25,13 +25,41 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 ```json
 { "event": "Round 4", "venue": "Sample Circuit", "date": "2027-09-04", "time": "18:00", "endDate": "2027-09-05", "link": "https://example.com" }
 ```
-`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate` and `link` are optional. No time zone is shown.
+`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate` and `link` are optional. A time zone and label are shown next to `time` only if the top of the file sets `timeZone` and `timeLabel` (see "League info" below).
 
 **Add a sponsor** (`data/sponsors.json`). Put the logo in `assets/logos/`:
 ```json
 { "name": "Acme", "logo": "/assets/logos/acme.svg", "url": "https://acme.example", "tier": "Major" }
 ```
 Without a `logo`, the name is shown as text.
+
+## League info
+
+`data/league.json` drives the league box at the top of the Schedule page. Every field except `name`/`season` is optional:
+
+```json
+{
+  "name": "The League", "season": "Season 04", "presentedBy": "Presented by Foxxtecca",
+  "tagline": "Short description.",
+  "facts": [{ "label": "Class", "value": "GT3" }],
+  "timeline": [{ "label": "Race", "time": "7:10 PM" }],
+  "timeZone": "ET",
+  "links": [{ "label": "Watch live", "url": "https://example.com", "primary": true }],
+  "partners": [{ "role": "Broadcast", "name": "Apex Racing TV" }],
+  "logos": [{ "name": "Foxxtecca", "src": "/assets/logos/foxxtecca-logo.webp" }],
+  "disclaimer": "Not affiliated."
+}
+```
+
+Link URLs must start with `https://` (other links are skipped, and `scripts/check.py` reports them). Logos shown in the dark strip should be white artwork. For a new season, update `data/league.json` and the rounds in `data/schedule.json`.
+
+In `data/schedule.json`, the optional top-level `timeLabel` ("Race") and `timeZone` ("ET") are shown next to each round's `time`, e.g. "Race 7:10 PM ET".
+
+The race-day times came from https://foxxtecca.com/league, which has typos in its time labels. Confirm them in the league's Discord or broadcast.
+
+### Credits
+
+The Foxxtecca and Apex Racing logos belong to their owners and are used to identify the league Pon Di Gas Motorsport races in. Pon Di Gas Motorsport is not affiliated with either company.
 
 ## Styling
 

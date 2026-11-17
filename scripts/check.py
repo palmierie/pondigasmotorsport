@@ -108,6 +108,41 @@ def check_links(root):
     return problems
 
 
+def _file_exists_exact_case(root, src):
+    # exact-case match: macOS ignores case but GitHub Pages does not
+    lp = root / src.lstrip("/")
+    return lp.parent.is_dir() and lp.name in {f.name for f in lp.parent.iterdir()}
+
+
+def check_league(root):
+    problems = []
+    lg = _load(root, "league.json", problems)
+    if lg is None:
+        return problems
+    if not isinstance(lg, dict):
+        return problems + ["league.json: must be an object"]
+    for k in ("name", "season"):
+        if not lg.get(k):
+            problems.append(f"league.json: missing {k}")
+    for i, f in enumerate(lg.get("facts") or []):
+        if not f.get("label") or not f.get("value"):
+            problems.append(f"league.json facts[{i}]: needs label and value")
+    for i, t in enumerate(lg.get("timeline") or []):
+        if not t.get("label") or not t.get("time"):
+            problems.append(f"league.json timeline[{i}]: needs label and time")
+    for i, l in enumerate(lg.get("links") or []):
+        if not l.get("label"):
+            problems.append(f"league.json links[{i}]: missing label")
+        if not str(l.get("url", "")).startswith("https://"):
+            problems.append(f"league.json links[{i}]: url must start with https:// ({l.get('url')!r})")
+    for i, lo in enumerate(lg.get("logos") or []):
+        if not lo.get("name"):
+            problems.append(f"league.json logos[{i}]: missing name")
+        if not lo.get("src") or not _file_exists_exact_case(root, lo["src"]):
+            problems.append(f"league.json logos[{i}]: logo not found (case-sensitive) {lo.get('src')!r}")
+    return problems
+
+
 def check_css(root):
     """Unbalanced braces make browsers silently drop the next rule."""
     text = re.sub(r"/\*.*?\*/", "", (root / "assets/css/style.css").read_text(), flags=re.S)
@@ -135,7 +170,7 @@ def check_brand_link(root):
 
 
 def main():
-    problems = check_data(ROOT) + check_links(ROOT) + check_css(ROOT) + check_brand_link(ROOT)
+    problems = check_data(ROOT) + check_links(ROOT) + check_css(ROOT) + check_brand_link(ROOT) + check_league(ROOT)
     for p in problems:
         print("PROBLEM:", p)
     print("OK" if not problems else f"{len(problems)} problem(s)")

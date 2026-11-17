@@ -45,8 +45,11 @@ function upcoming(data, today) {
 }
 
 // Inner spans shared by schedule rows, result rows and feature boxes.
-function raceSpans(r, { result = false } = {}) {
-  const dateText = result ? formatDate(r.date) : [formatRange(r), formatTime(r.time)].filter(Boolean).join(" · ");
+function raceSpans(r, { result = false, timeLabel = "", timeZone = "" } = {}) {
+  // Label and zone only make sense next to a real time: "Race 7:10 PM ET".
+  const time = formatTime(r.time);
+  const timeText = time ? [timeLabel, time, timeZone].filter(Boolean).join(" ") : "";
+  const dateText = result ? formatDate(r.date) : [formatRange(r), timeText].filter(Boolean).join(" · ");
   const title = r.link ? `<a href="${e(r.link)}" rel="noopener">${e(r.event)}</a>` : e(r.event);
   const meta = [r.class, r.position].filter(Boolean).map(e).join(" · ");
   return (
@@ -77,13 +80,14 @@ export function renderResults(data) {
 export function renderSchedule(data, today) {
   const races = upcoming(data, today);
   if (!races.length) return empty("No upcoming races.");
-  return `<ol class="rows">${races.map((r) => row(r)).join("")}</ol>`;
+  const opts = { timeLabel: data.timeLabel, timeZone: data.timeZone };
+  return `<ol class="rows">${races.map((r) => row(r, opts)).join("")}</ol>`;
 }
 
 export function renderNextRace(data, today) {
   const [next] = upcoming(data, today);
   if (!next) return empty("No upcoming races.");
-  return feature(next);
+  return feature(next, { timeLabel: data.timeLabel, timeZone: data.timeZone });
 }
 
 export function renderLatestResult(data) {
@@ -105,4 +109,38 @@ export function renderSponsors(data) {
     return `<li class="cell box">${body}</li>`;
   });
   return `<ul class="cells">${items.join("")}</ul>`;
+}
+
+// League box: dark logo strip + outlined body. Every part is optional.
+const arr = (x) => (Array.isArray(x) ? x : []);
+
+export function renderLeague(data) {
+  const d = data || {};
+  if (!d.name && !d.season) return "";
+  const zone = d.timeZone ? ` ${d.timeZone}` : "";
+
+  // Logos are white artwork; if one fails to load, main.js reveals the hidden name beside it.
+  const logos = arr(d.logos)
+    .filter((l) => l && l.src)
+    .map((l) => `<img class="league-logo" src="${e(l.src)}" alt="${e(l.name || "")}" data-logo><span class="visually-hidden">${e(l.name || "")}</span>`)
+    .join("");
+  const strip = logos ? `<div class="league-strip">${logos}</div>` : "";
+
+  const heading = [d.name ? e(d.name) : "", d.season ? `<span class="league-season">${e(d.season)}</span>` : ""].filter(Boolean).join(" ");
+  const facts = arr(d.facts).filter((f) => f && f.label && f.value);
+  const timeline = arr(d.timeline).filter((t) => t && t.label && t.time);
+  const links = arr(d.links).filter((l) => l && l.label && /^https:\/\//.test(l.url || ""));
+  const partners = arr(d.partners).filter((p) => p && p.name);
+
+  const body =
+    `<h2>${heading}</h2>` +
+    (d.presentedBy ? `<p class="league-by">${e(d.presentedBy)}</p>` : "") +
+    (d.tagline ? `<p class="league-tagline">${e(d.tagline)}</p>` : "") +
+    (facts.length ? `<dl class="facts">${facts.map((f) => `<div><dt>${e(f.label)}</dt><dd>${e(f.value)}</dd></div>`).join("")}</dl>` : "") +
+    (timeline.length ? `<ol class="timeline">${timeline.map((t) => `<li><span>${e(t.label)}</span><span>${e(t.time)}${e(zone)}</span></li>`).join("")}</ol>` : "") +
+    (links.length ? `<p class="links">${links.map((l) => `<a class="${l.primary ? "btn" : "box"}" href="${e(l.url)}" rel="noopener">${e(l.label)}</a>`).join("")}</p>` : "") +
+    (partners.length ? `<ul class="partners">${partners.map((p) => `<li>${p.role ? `<span class="partner-role">${e(p.role)}</span> ` : ""}${e(p.name)}</li>`).join("")}</ul>` : "") +
+    (d.disclaimer ? `<p class="disclaimer">${e(d.disclaimer)}</p>` : "");
+
+  return `<section class="league box">${strip}<div class="league-body">${body}</div></section>`;
 }
