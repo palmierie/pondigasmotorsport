@@ -66,8 +66,11 @@ def check_data(root):
         for i, s in enumerate(sp.get("sponsors", [])):
             if not s.get("name"):
                 problems.append(f"sponsors.json sponsors[{i}]: missing name")
-            if s.get("logo") and not (root / s["logo"].lstrip("/")).exists():
-                problems.append(f"sponsors.json sponsors[{i}]: logo not found {s['logo']}")
+            if s.get("logo"):
+                lp = root / s["logo"].lstrip("/")
+                # exact-case match: macOS ignores case but GitHub Pages does not
+                if not lp.parent.is_dir() or lp.name not in {f.name for f in lp.parent.iterdir()}:
+                    problems.append(f"sponsors.json sponsors[{i}]: logo not found (case-sensitive) {s['logo']}")
     return problems
 
 

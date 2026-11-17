@@ -43,6 +43,8 @@ Without a `logo`, the name is shown as text.
 
 ## Publishing on a custom domain
 
+Pages are linked from the site root (`/assets/...`), so the site renders correctly only at a domain root such as your custom domain. The default `<username>.github.io/pondigasmotorsport/` address will show an unstyled page until the custom domain is set up.
+
 1. Create a file named `CNAME` in the repo root containing only your domain, e.g. `www.example.com`.
 2. At your domain registrar, add DNS records:
    - Apex domain (`example.com`): four **A** records to `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`.

@@ -29,6 +29,14 @@ t("missing optional fields never print undefined", () => {
 });
 t("sponsor without logo renders name", () => ok(R.renderSponsors({ sponsors: [{ name: "Acme" }] }).includes("Acme"), "no name"));
 t("sponsor with logo renders img with alt", () => { const h = R.renderSponsors({ sponsors: [{ name: "Acme", logo: "/assets/logos/a.png" }] }); ok(h.includes("<img") && h.includes('alt="Acme"'), h); });
+t("sponsor with logo also carries its name as fallback text", () => {
+  const h = R.renderSponsors({ sponsors: [{ name: "Acme", logo: "/assets/logos/a.png" }] });
+  ok(h.includes('data-logo') && h.includes('class="sponsor-name visually-hidden">Acme<'), h);
+});
+t("sponsor without logo shows name unhidden", () => {
+  const h = R.renderSponsors({ sponsors: [{ name: "Acme" }] });
+  ok(h.includes('class="sponsor-name">Acme<') && !h.includes("visually-hidden"), h);
+});
 t("sponsor with url is linked", () => ok(R.renderSponsors({ sponsors: [{ name: "Acme", url: "https://a.com" }] }).includes('href="https://a.com"'), "no link"));
 t("empty sponsors shows message", () => ok(R.renderSponsors({ sponsors: [] }).includes("empty"), "no msg"));
 t("script in event name is escaped", () => ok(!R.renderResults({ seasons: [{ year: 2026, races: [{ event: "<scr" + "ipt>x</scr" + "ipt>", venue: "V", date: "2026-03-01" }] }] }).includes("<scr" + "ipt>"), "unescaped"));

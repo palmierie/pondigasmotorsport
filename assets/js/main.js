@@ -40,3 +40,15 @@ toggle?.addEventListener("click", () => {
   const open = document.body.classList.toggle("nav-open");
   toggle.setAttribute("aria-expanded", String(open));
 });
+
+// A sponsor logo that fails to load (wrong path or case) falls back to the sponsor's name.
+document.addEventListener(
+  "error",
+  (ev) => {
+    const img = ev.target;
+    if (!(img instanceof HTMLImageElement) || !img.hasAttribute("data-logo")) return;
+    img.hidden = true;
+    img.nextElementSibling?.classList.remove("visually-hidden");
+  },
+  true
+);

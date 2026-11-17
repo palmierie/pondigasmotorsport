@@ -84,8 +84,9 @@ export function renderSponsors(data) {
   const list = data.sponsors || [];
   if (!list.length) return empty("Sponsors coming soon.");
   const items = list.map((s) => {
+    // With a logo, the name is kept as hidden text; main.js reveals it if the image fails to load.
     const inner = s.logo
-      ? `<img src="${e(s.logo)}" alt="${e(s.name)}" loading="lazy">`
+      ? `<img src="${e(s.logo)}" alt="${e(s.name)}" loading="lazy" data-logo><span class="sponsor-name visually-hidden">${e(s.name)}</span>`
       : `<span class="sponsor-name">${e(s.name)}</span>`;
     const body = s.url ? `<a href="${e(s.url)}" rel="noopener">${inner}</a>` : inner;
     return `<div class="sponsor">${body}</div>`;
