@@ -35,9 +35,9 @@ Without a `logo`, the name is shown as text.
 
 ## Placeholders to replace
 
-- Contact email `hello@example.com` (Sponsors and Contact pages)
-- Instagram/Facebook links in the footer and Contact page
-- Hero copy, "Who we are" text, team members, and all seed data in `data/`
+- Hero copy and "Who we are" text
+- All seed data in `data/` (results, schedule, sponsors)
+- No contact email is published yet. When you add one, put a `mailto:` link on the Contact page and the Sponsors "Partner with us" button
 
 ## Publishing on a custom domain
 
