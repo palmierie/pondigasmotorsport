@@ -14,6 +14,22 @@ const eq = (a, b) => { if (a !== b) throw new Error(`expected ${JSON.stringify(b
 const ok = (c, m) => { if (!c) throw new Error(m); };
 const d = (s) => new Date(s + "T12:00:00");
 
+t("schedule row shows label, time and zone", () => {
+  const h = R.renderSchedule({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "19:10" }] }, d("2027-01-01"));
+  ok(h.includes("Tue, Jan 5, 2027 · Race 7:10 PM ET"), h);
+});
+t("time without label or zone shows only the time", () => {
+  const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "18:00" }] }, d("2027-01-01"));
+  ok(h.includes("· 6:00 PM<") && !h.includes("ET") && !h.includes("Race"), h);
+});
+t("zone without a round time shows no zone or label", () => {
+  const h = R.renderSchedule({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05" }] }, d("2027-01-01"));
+  ok(!h.includes("ET") && !h.includes("Race") && !h.includes("undefined"), h);
+});
+t("next race feature shows label, time and zone", () => {
+  const h = R.renderNextRace({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "19:10" }] }, d("2027-01-01"));
+  ok(h.includes("Race 7:10 PM ET"), h);
+});
 t("schedule renders an ordered list of rows", () => {
   const h = R.renderSchedule({ races: [{ event: "A", venue: "V", date: "2027-02-01" }, { event: "B", venue: "V", date: "2027-03-01" }] }, d("2027-01-01"));
   ok(h.includes('<ol class="rows">'), h);
