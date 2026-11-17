@@ -17,9 +17,9 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 
 **Add a result** (`data/results.json`, inside the season's `races`; create a new season object for a new year):
 ```json
-{ "event": "Round 3", "venue": "Example Raceway", "date": "2026-07-18", "class": "Class A", "position": "P2", "notes": "Optional", "photo": "/assets/photos/round3.jpg" }
+{ "event": "Round 3", "venue": "Example Raceway", "date": "2026-07-18", "class": "Class A", "position": "P2", "notes": "Optional", "photo": "/assets/photos/round3.jpg", "logo": "/assets/tracks/example-raceway.webp" }
 ```
-`class`, `position`, `notes` and `photo` are optional.
+`class`, `position`, `notes`, `photo` and `logo` are optional. The `logo` (a track logo from `assets/tracks/`) shows in the home page's Latest Result box; the Results page rows don't show logos.
 
 **Add a race to the schedule** (`data/schedule.json`). Past races drop off automatically:
 ```json
@@ -32,6 +32,45 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 { "name": "Acme", "logo": "/assets/logos/acme.svg", "url": "https://acme.example", "tier": "Major" }
 ```
 Without a `logo`, the name is shown as text.
+
+## Updating with Claude (copy-paste prompts)
+
+Open this project in Claude Code, paste one of the prompts below and fill in the `<angle brackets>`. Claude follows this README, works on a branch, runs `scripts/check.py`, previews the pages and tells you what changed. Nothing goes live until you reply "Merge and push".
+
+**How the site decides what to show**
+- **Schedule page and Next Race box:** the rounds in `data/schedule.json` that haven't happened yet, soonest first. A finished round drops off by itself once its date has passed.
+- **Latest Result box (home page):** the entry in `data/results.json` with the most recent date, even if its position says "Upcoming". The Results page lists every entry, newest first.
+- **Track logos:** files in `assets/tracks/` (`road-atlanta`, `mid-ohio`, `monza`, `nurburgring`, `sonoma`, `brands-hatch`, `daytona`, `watkins-glen`). A new track needs its own logo file there.
+
+**After a race: record the result**
+```text
+Read the README. In data/results.json, record <Round N> at <track> on <YYYY-MM-DD>: I finished <P3 / DNF / DSQ> in <class, e.g. GT3 Pro-AM>. Optional note: <note>. If there is already an "Upcoming" entry for this round, update it and keep its track logo; otherwise add a new entry with the track's logo from assets/tracks/. Run scripts/check.py, preview the home page and the Results page, and tell me what changed. Don't merge until I say so.
+```
+
+**Show the next race as "Upcoming" in Latest Result**
+```text
+Read the README. Add <Round N> at <track> on <YYYY-MM-DD> to data/results.json with class <class>, position "Upcoming" and the track's logo from assets/tracks/, the same way the existing Upcoming entry was done. Remember it becomes the Latest Result box because it has the newest date. Run scripts/check.py, preview the home page and tell me what changed. Don't merge until I say so.
+```
+
+**Add rounds to the schedule**
+```text
+Read the README. Add these rounds to data/schedule.json: <Round, date, track, race time (e.g. 7:10 PM ET)>, <next round...>. Use the track logos in assets/tracks/. If any track has no logo yet, stop and tell me which ones so I can add them. Keep the existing timeLabel and timeZone. Run scripts/check.py, preview the Schedule page and the Next Race box on the home page, and tell me what changed. Don't merge until I say so.
+```
+
+**Change a round (date, time or track)**
+```text
+Read the README. In data/schedule.json, change <Round N> to <new date / new race time / new track>. If the track changes, switch to that track's logo in assets/tracks/. Run scripts/check.py, preview the Schedule page and the home page, and tell me what changed. Don't merge until I say so.
+```
+
+**Start a new season or league**
+```text
+Read the README. I'm starting <league name, season, class, division>. Update data/league.json with this info: <facts, race-day times, links, partners>. Replace the rounds in data/schedule.json with these: <list of rounds, dates, tracks, race time>. Keep last season's finished rounds in data/results.json under the right year, and don't delete any results. Use track logos from assets/tracks/ and tell me which tracks are missing one. Run scripts/check.py, preview the Schedule page, the Results page and the home page, and tell me what changed. Don't merge until I say so.
+```
+
+**Tips**
+- Say the finish exactly as it should appear (`P3`, `DNF`, `DSQ`); the site shows it as typed.
+- To add a photo to a result, put the file in `assets/photos/` (lowercase, no spaces) and give Claude the filename.
+- After the site goes live, browsers can cache files for about 10 minutes. If a page looks wrong, do a hard refresh (Cmd+Shift+R on Mac, Ctrl+Shift+R on Windows).
 
 ## Watch page
 
