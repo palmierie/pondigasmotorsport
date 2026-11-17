@@ -1,0 +1,11 @@
+{
+  "seasons": [
+    {
+      "year": 2026,
+      "races": [
+        { "event": "Round 1 (placeholder)", "venue": "Example Raceway", "date": "2026-03-14", "class": "Class A", "position": "P3", "notes": "Placeholder result. Replace with real data." },
+        { "event": "Round 2 (placeholder)", "venue": "Sample Circuit", "date": "2026-05-09", "class": "Class A", "position": "P1" }
+      ]
+    }
+  ]
+}

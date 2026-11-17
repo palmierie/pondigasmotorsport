@@ -1,0 +1,7 @@
+{
+  "races": [
+    { "event": "Round 1 (placeholder)", "venue": "Example Raceway", "date": "2027-03-13", "endDate": "2027-03-14" },
+    { "event": "Round 2 (placeholder)", "venue": "Sample Circuit", "date": "2027-05-08" },
+    { "event": "Round 3 (placeholder)", "venue": "Demo Park", "date": "2027-07-17", "link": "https://example.com" }
+  ]
+}
