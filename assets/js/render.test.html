@@ -1,0 +1,61 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>render tests</title>
+<pre id="out">running…</pre>
+<script type="module">
+import * as R from "./render.js";
+const out = [];
+let failed = 0;
+function t(name, fn) {
+  try { fn(); out.push("PASS " + name); }
+  catch (e) { failed++; out.push("FAIL " + name + ": " + e.message); }
+}
+const eq = (a, b) => { if (a !== b) throw new Error(`expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`); };
+const ok = (c, m) => { if (!c) throw new Error(m); };
+const d = (s) => new Date(s + "T12:00:00");
+
+t("empty results shows message", () => ok(R.renderResults({ seasons: [] }).includes("No results yet."), "no msg"));
+t("empty schedule shows message", () => ok(R.renderSchedule({ races: [] }, d("2027-01-01")).includes("No upcoming races."), "no msg"));
+t("race today is upcoming", () => ok(R.renderSchedule({ races: [{ event: "Today", venue: "V", date: "2027-01-01" }] }, d("2027-01-01")).includes("Today"), "missing"));
+t("race yesterday is excluded", () => ok(!R.renderSchedule({ races: [{ event: "Old", venue: "V", date: "2026-12-31" }] }, d("2027-01-01")).includes("Old"), "present"));
+t("multi-day race still running is upcoming", () => ok(R.renderSchedule({ races: [{ event: "Long", venue: "V", date: "2026-12-31", endDate: "2027-01-02" }] }, d("2027-01-01")).includes("Long"), "missing"));
+t("schedule sorted ascending", () => {
+  const h = R.renderSchedule({ races: [{ event: "B", venue: "V", date: "2027-06-01" }, { event: "A", venue: "V", date: "2027-02-01" }] }, d("2027-01-01"));
+  ok(h.indexOf("A") < h.indexOf("B") && h.indexOf(">A<") !== -1 || h.indexOf("A") < h.indexOf("B"), "order");
+});
+t("missing optional fields never print undefined", () => {
+  const h = R.renderResults({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01" }] }] });
+  ok(!h.includes("undefined") && !h.includes("null"), h);
+});
+t("sponsor without logo renders name", () => ok(R.renderSponsors({ sponsors: [{ name: "Acme" }] }).includes("Acme"), "no name"));
+t("sponsor with logo renders img with alt", () => { const h = R.renderSponsors({ sponsors: [{ name: "Acme", logo: "/assets/logos/a.png" }] }); ok(h.includes("<img") && h.includes('alt="Acme"'), h); });
+t("sponsor with logo also carries its name as fallback text", () => {
+  const h = R.renderSponsors({ sponsors: [{ name: "Acme", logo: "/assets/logos/a.png" }] });
+  ok(h.includes('data-logo') && h.includes('class="sponsor-name visually-hidden">Acme<'), h);
+});
+t("sponsor without logo shows name unhidden", () => {
+  const h = R.renderSponsors({ sponsors: [{ name: "Acme" }] });
+  ok(h.includes('class="sponsor-name">Acme<') && !h.includes("visually-hidden"), h);
+});
+t("sponsor with url is linked", () => ok(R.renderSponsors({ sponsors: [{ name: "Acme", url: "https://a.com" }] }).includes('href="https://a.com"'), "no link"));
+t("empty sponsors shows message", () => ok(R.renderSponsors({ sponsors: [] }).includes("empty"), "no msg"));
+t("script in event name is escaped", () => ok(!R.renderResults({ seasons: [{ year: 2026, races: [{ event: "<scr" + "ipt>x</scr" + "ipt>", venue: "V", date: "2026-03-01" }] }] }).includes("<scr" + "ipt>"), "unescaped"));
+t("escapeHtml escapes quotes and ampersand", () => eq(R.escapeHtml(`&"<>'`), "&amp;&quot;&lt;&gt;&#39;"));
+t("seasons newest first", () => {
+  const h = R.renderResults({ seasons: [{ year: 2024, races: [] }, { year: 2026, races: [] }] });
+  ok(h.indexOf("2026") < h.indexOf("2024"), "order");
+});
+t("next race picks earliest upcoming", () => {
+  const h = R.renderNextRace({ races: [{ event: "Later", venue: "V", date: "2027-06-01" }, { event: "Sooner", venue: "V", date: "2027-02-01" }] }, d("2027-01-01"));
+  ok(h.includes("Sooner") && !h.includes("Later"), h);
+});
+t("next race empty message", () => ok(R.renderNextRace({ races: [] }, d("2027-01-01")).includes("empty"), "no msg"));
+t("latest result picks most recent race", () => {
+  const h = R.renderLatestResult({ seasons: [{ year: 2026, races: [{ event: "Early", venue: "V", date: "2026-01-01" }, { event: "Recent", venue: "V", date: "2026-09-01" }] }] });
+  ok(h.includes("Recent") && !h.includes("Early"), h);
+});
+t("latest result empty message", () => ok(R.renderLatestResult({ seasons: [] }).includes("empty"), "no msg"));
+
+document.getElementById("out").textContent = out.join("\n") + `\n\n${failed ? "FAILED: " + failed : "ALL PASS"}`;
+document.title = failed ? "FAIL" : "PASS";
+</script>
