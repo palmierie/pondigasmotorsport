@@ -45,7 +45,13 @@ function upcoming(data, today) {
 }
 
 // Inner spans shared by schedule rows, result rows and feature boxes.
-function raceSpans(r, { result = false, timeLabel = "", timeZone = "", logo = false } = {}) {
+// Watch link: the round's own `watch`, else the file's default; https only.
+const isHttps = (u) => typeof u === "string" && u.startsWith("https://");
+const watchHref = (r, opts = {}) => (opts.watch ? [r.watch, opts.watch.url].find(isHttps) || "" : "");
+
+function raceSpans(r, opts = {}) {
+  const { result = false, timeLabel = "", timeZone = "", logo = false, watch = null } = opts;
+  const href = watchHref(r, opts);
   // Label and zone only make sense next to a real time: "Race 7:10 PM ET".
   const time = formatTime(r.time);
   const timeText = time ? [timeLabel, time, timeZone].filter(Boolean).join(" ") : "";
@@ -60,13 +66,18 @@ function raceSpans(r, { result = false, timeLabel = "", timeZone = "", logo = fa
     `<span class="row-title">${title}</span>` +
     `<span class="row-venue">${e(r.venue)}</span>` +
     (meta ? `<span class="row-meta">${meta}</span>` : "") +
-    (r.notes ? `<span class="row-notes">${e(r.notes)}</span>` : "")
+    (r.notes ? `<span class="row-notes">${e(r.notes)}</span>` : "") +
+    (href
+      ? `<span class="row-watch"><a class="btn watch-btn" href="${e(href)}" target="_blank" rel="noopener">${e(watch.label)}<span class="visually-hidden"> (opens in a new tab)</span></a></span>`
+      : "")
   );
 }
 
 const withLogo = (r, opts = {}) => (opts.logo && r.logo ? " has-logo" : "");
-const row = (r, opts) => `<li class="row box${withLogo(r, opts)}">${raceSpans(r, opts)}</li>`;
-const feature = (r, opts) => `<div class="box feature${withLogo(r, opts)}">${raceSpans(r, opts)}</div>`;
+const withWatch = (r, opts = {}) => (watchHref(r, opts) ? " has-watch" : "");
+const classes = (r, opts) => withLogo(r, opts) + withWatch(r, opts);
+const row = (r, opts) => `<li class="row box${classes(r, opts)}">${raceSpans(r, opts)}</li>`;
+const feature = (r, opts) => `<div class="box feature${classes(r, opts)}">${raceSpans(r, opts)}</div>`;
 
 export function renderResults(data) {
   const seasons = [...(data.seasons || [])].sort((a, b) => b.year - a.year);
@@ -74,7 +85,7 @@ export function renderResults(data) {
   return seasons
     .map((s) => {
       const races = [...(s.races || [])].sort((a, b) => parseDate(b.date) - parseDate(a.date));
-      const body = races.length ? `<ol class="rows">${races.map((r) => row(r, { result: true })).join("")}</ol>` : empty("No results yet.");
+      const body = races.length ? `<ol class="rows">${races.map((r) => row(r, { result: true, watch: { label: "Watch replay", url: data.watchUrl } })).join("")}</ol>` : empty("No results yet.");
       return `<section class="season"><h2>${e(s.year)}</h2>${body}</section>`;
     })
     .join("");
@@ -83,21 +94,21 @@ export function renderResults(data) {
 export function renderSchedule(data, today) {
   const races = upcoming(data, today);
   if (!races.length) return empty("No upcoming races.");
-  const opts = { timeLabel: data.timeLabel, timeZone: data.timeZone, logo: true };
+  const opts = { timeLabel: data.timeLabel, timeZone: data.timeZone, logo: true, watch: { label: "Watch", url: data.watchUrl } };
   return `<ol class="rows">${races.map((r) => row(r, opts)).join("")}</ol>`;
 }
 
 export function renderNextRace(data, today) {
   const [next] = upcoming(data, today);
   if (!next) return empty("No upcoming races.");
-  return feature(next, { timeLabel: data.timeLabel, timeZone: data.timeZone, logo: true });
+  return feature(next, { timeLabel: data.timeLabel, timeZone: data.timeZone, logo: true, watch: { label: "Watch", url: data.watchUrl } });
 }
 
 export function renderLatestResult(data) {
   const all = (data.seasons || []).flatMap((s) => s.races || []);
   if (!all.length) return empty("No results yet.");
   const latest = all.reduce((a, b) => (parseDate(b.date) > parseDate(a.date) ? b : a));
-  return feature(latest, { result: true, logo: true });
+  return feature(latest, { result: true, logo: true, watch: { label: "Watch replay", url: data.watchUrl } });
 }
 
 export function renderSponsors(data) {
