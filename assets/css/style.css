@@ -195,3 +195,4 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
 .pull-quote { margin: 8px 0 0; padding: 4px 0 4px 20px; border-left: 4px solid var(--green); }
 .pull-quote p { margin: 0; font-family: var(--font-heading); font-weight: 700; font-size: clamp(1.6rem, 3.2vw, 2.3rem); line-height: 1.15; }
 .pull-quote footer { margin-top: 10px; font-size: .9rem; color: var(--muted); }
+.pull-quote s { text-decoration-thickness: .1em; text-decoration-color: var(--lion-red); }
