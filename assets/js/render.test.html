@@ -66,6 +66,51 @@ t("latest result without a logo renders no tile", () => {
   const h = R.renderLatestResult({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01" }] }] });
   ok(!h.includes("row-logo") && !h.includes("has-logo") && !h.includes("undefined"), h);
 });
+const YT = "https://www.youtube.com/@x/live";
+const wRound = { event: "R1", venue: "V", date: "2027-02-01" };
+t("schedule row shows a Watch button with the default link", () => {
+  const h = R.renderSchedule({ watchUrl: YT, races: [wRound] }, d("2027-01-01"));
+  ok(h.includes('<span class="row-watch"><a class="btn watch-btn" href="' + YT + '" target="_blank" rel="noopener">Watch<span class="visually-hidden"> (opens in a new tab)</span></a></span>') && h.includes("has-watch"), h);
+});
+t("round watch link overrides the default", () => {
+  const h = R.renderSchedule({ watchUrl: YT, races: [{ ...wRound, watch: "https://www.youtube.com/watch?v=abc" }] }, d("2027-01-01"));
+  ok(h.includes('href="https://www.youtube.com/watch?v=abc"') && !h.includes(YT), h);
+});
+t("no watch link means no button", () => {
+  const h = R.renderSchedule({ races: [wRound] }, d("2027-01-01"));
+  ok(!h.includes("watch-btn") && !h.includes("has-watch") && !h.includes("row-watch") && !h.includes("undefined"), h);
+});
+t("non-https watch links are not rendered", () => {
+  const none = R.renderSchedule({ watchUrl: "www.x.com", races: [{ ...wRound, watch: "javascript:alert(1)" }] }, d("2027-01-01"));
+  ok(!none.includes("watch-btn") && !none.includes("javascript"), none);
+  const fallback = R.renderSchedule({ watchUrl: YT, races: [{ ...wRound, watch: "javascript:alert(1)" }] }, d("2027-01-01"));
+  ok(fallback.includes('href="' + YT + '"') && !fallback.includes("javascript"), fallback);
+});
+t("watch link opens in a new tab with noopener and screen reader text", () => {
+  const h = R.renderSchedule({ watchUrl: YT, races: [wRound] }, d("2027-01-01"));
+  ok(h.includes('target="_blank"') && h.includes('rel="noopener"') && h.includes("(opens in a new tab)"), h);
+});
+t("watch url is escaped in the attribute", () => {
+  const h = R.renderSchedule({ watchUrl: YT, races: [{ ...wRound, watch: 'https://x.com/"onmouseover="alert(1)<b>' }] }, d("2027-01-01"));
+  ok(!h.includes('"onmouseover="') && !h.includes("<b>"), h);
+});
+t("results row shows a Watch replay button", () => {
+  const h = R.renderResults({ watchUrl: "https://www.youtube.com/@x/streams", seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01" }] }] });
+  ok(h.includes(">Watch replay<span") && h.includes("has-watch") && h.includes('href="https://www.youtube.com/@x/streams"'), h);
+});
+t("next race feature shows a Watch button", () => {
+  const h = R.renderNextRace({ watchUrl: YT, races: [wRound] }, d("2027-01-01"));
+  ok(h.includes('class="box feature has-watch"') && h.includes(">Watch<span"), h);
+});
+t("latest result feature shows a Watch replay button", () => {
+  const h = R.renderLatestResult({ watchUrl: "https://www.youtube.com/@x/streams", seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01" }] }] });
+  ok(h.includes('class="box feature has-watch"') && h.includes(">Watch replay<span"), h);
+});
+t("watch button is not nested inside the title link", () => {
+  const h = R.renderSchedule({ watchUrl: YT, races: [{ ...wRound, link: "https://r.com" }] }, d("2027-01-01"));
+  const start = h.indexOf('<a href="https://r.com"'), end = h.indexOf("</a>", start);
+  ok(start !== -1 && !h.slice(start, end).includes("watch-btn") && h.includes("watch-btn"), h);
+});
 t("schedule row shows label, time and zone", () => {
   const h = R.renderSchedule({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "19:10" }] }, d("2027-01-01"));
   ok(h.includes("Tue, Jan 5, 2027 · Race 7:10 PM ET"), h);

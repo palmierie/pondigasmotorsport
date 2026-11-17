@@ -17,15 +17,17 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 
 **Add a result** (`data/results.json`, inside the season's `races`; create a new season object for a new year):
 ```json
-{ "event": "Round 3", "venue": "Example Raceway", "date": "2026-07-18", "class": "Class A", "position": "P2", "notes": "Optional", "photo": "/assets/photos/round3.jpg", "logo": "/assets/tracks/example-raceway.webp" }
+{ "event": "Round 3", "venue": "Example Raceway", "date": "2026-07-18", "class": "Class A", "position": "P2", "notes": "Optional", "photo": "/assets/photos/round3.jpg", "logo": "/assets/tracks/example-raceway.webp", "watch": "https://www.youtube.com/watch?v=VIDEO_ID" }
 ```
-`class`, `position`, `notes`, `photo` and `logo` are optional. The `logo` (a track logo from `assets/tracks/`) shows in the home page's Latest Result box; the Results page rows don't show logos.
+`class`, `position`, `notes`, `photo`, `logo` and `watch` are optional. The `logo` (a track logo from `assets/tracks/`) shows in the home page's Latest Result box; the Results page rows don't show logos.
 
 **Add a race to the schedule** (`data/schedule.json`). Past races drop off automatically:
 ```json
-{ "event": "Round 4", "venue": "Sample Circuit", "date": "2027-09-04", "time": "18:00", "endDate": "2027-09-05", "link": "https://example.com", "logo": "/assets/tracks/sample-circuit.webp" }
+{ "event": "Round 4", "venue": "Sample Circuit", "date": "2027-09-04", "time": "18:00", "endDate": "2027-09-05", "link": "https://example.com", "logo": "/assets/tracks/sample-circuit.webp", "watch": "https://www.youtube.com/watch?v=VIDEO_ID" }
 ```
-`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate`, `link` and `logo` are optional. `logo` is a track logo from `assets/tracks/`, shown in a dark square tile on the Schedule page and in the Next Race box (logos should be artwork made for dark backgrounds; `scripts/check.py` reports a missing or wrong-case file). A time zone and label are shown next to `time` only if the top of the file sets `timeZone` and `timeLabel` (see "League info" below).
+`time` (24-hour `HH:MM`, shown as e.g. 6:00 PM), `endDate`, `link`, `logo` and `watch` are optional. `logo` is a track logo from `assets/tracks/`, shown in a dark square tile on the Schedule page and in the Next Race box (logos should be artwork made for dark backgrounds; `scripts/check.py` reports a missing or wrong-case file). A time zone and label are shown next to `time` only if the top of the file sets `timeZone` and `timeLabel` (see "League info" below).
+
+**Watch buttons.** Every race item (Schedule rows, Results rows, and the home page's Next Race and Latest Result cards) has a green button that opens YouTube in a new tab: "Watch" on schedule items, "Watch replay" on results items. The link is the round's own `watch` if it has one, otherwise the `watchUrl` at the top of the file (schedule: the channel's live page, results: its streams page). Only `https://` links are used, and `scripts/check.py` reports anything else. With no `watch` and no `watchUrl`, an item shows no button.
 
 **Add a sponsor** (`data/sponsors.json`). Put the logo in `assets/logos/`:
 ```json
@@ -40,11 +42,12 @@ Open this project in Claude Code, paste one of the prompts below and fill in the
 **How the site decides what to show**
 - **Schedule page and Next Race box:** the rounds in `data/schedule.json` that haven't happened yet, soonest first. A finished round drops off by itself once its date has passed.
 - **Latest Result box (home page):** the entry in `data/results.json` with the most recent date, even if its position says "Upcoming". The Results page lists every entry, newest first.
+- **Watch buttons:** every race item links to the round's `watch` URL, or the file's default `watchUrl` if the round has none.
 - **Track logos:** files in `assets/tracks/` (`road-atlanta`, `mid-ohio`, `monza`, `nurburgring`, `sonoma`, `brands-hatch`, `daytona`, `watkins-glen`). A new track needs its own logo file there.
 
 **After a race: record the result**
 ```text
-Read the README. In data/results.json, record <Round N> at <track> on <YYYY-MM-DD>: I finished <P3 / DNF / DSQ> in <class, e.g. GT3 Pro-AM>. Optional note: <note>. If there is already an "Upcoming" entry for this round, update it and keep its track logo; otherwise add a new entry with the track's logo from assets/tracks/. Run scripts/check.py, preview the home page and the Results page, and tell me what changed. Don't merge until I say so.
+Read the README. In data/results.json, record <Round N> at <track> on <YYYY-MM-DD>: I finished <P3 / DNF / DSQ> in <class, e.g. GT3 Pro-AM>. Optional note: <note>. If there is already an "Upcoming" entry for this round, update it and keep its track logo and watch link; optional YouTube replay link for this race: <URL>, set as its "watch"; otherwise add a new entry with the track's logo from assets/tracks/. Run scripts/check.py, preview the home page and the Results page, and tell me what changed. Don't merge until I say so.
 ```
 
 **Show the next race as "Upcoming" in Latest Result**
@@ -54,7 +57,7 @@ Read the README. Add <Round N> at <track> on <YYYY-MM-DD> to data/results.json w
 
 **Add rounds to the schedule**
 ```text
-Read the README. Add these rounds to data/schedule.json: <Round, date, track, race time (e.g. 7:10 PM ET)>, <next round...>. Use the track logos in assets/tracks/. If any track has no logo yet, stop and tell me which ones so I can add them. Keep the existing timeLabel and timeZone. Run scripts/check.py, preview the Schedule page and the Next Race box on the home page, and tell me what changed. Don't merge until I say so.
+Read the README. Add these rounds to data/schedule.json: <Round, date, track, race time (e.g. 7:10 PM ET)>, <next round...>. Use the track logos in assets/tracks/. If any track has no logo yet, stop and tell me which ones so I can add them. Optional YouTube stream link for each round: <URL per round, or leave blank to use the default>, set as "watch". Keep the existing timeLabel, timeZone and watchUrl. Run scripts/check.py, preview the Schedule page and the Next Race box on the home page, and tell me what changed. Don't merge until I say so.
 ```
 
 **Change a round (date, time or track)**
