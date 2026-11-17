@@ -173,6 +173,29 @@ def check_external_links(root):
     return problems
 
 
+NAV_ORDER = ["Home", "Watch", "Schedule", "Results", "Sponsors", "Team", "Contact"]
+
+
+def check_nav_order(root):
+    """Every page lists the nav links, and the footer's Explore links, in the same order."""
+    problems = []
+    for page in sorted(root.rglob("*.html")):
+        if any(part in (".superpowers", "docs") for part in page.relative_to(root).parts):
+            continue
+        text = page.read_text()
+        if 'class="site-header"' not in text:
+            continue
+        nav = re.search(r'<nav class="nav".*?</nav>', text, re.S)
+        got = re.findall(r"<a [^>]*>([^<]+)</a>", nav.group(0)) if nav else []
+        if got != NAV_ORDER:
+            problems.append(f"{page.relative_to(root)}: nav order is {got}, expected {NAV_ORDER}")
+        foot = re.search(r"<h4>Explore</h4><ul>(.*?)</ul>", text, re.S)
+        got_f = re.findall(r"<a [^>]*>([^<]+)</a>", foot.group(1)) if foot else []
+        if got_f != NAV_ORDER[1:]:
+            problems.append(f"{page.relative_to(root)}: footer Explore order is {got_f}, expected {NAV_ORDER[1:]}")
+    return problems
+
+
 def check_css(root):
     """Unbalanced braces make browsers silently drop the next rule."""
     text = re.sub(r"/\*.*?\*/", "", (root / "assets/css/style.css").read_text(), flags=re.S)
@@ -200,7 +223,7 @@ def check_brand_link(root):
 
 
 def main():
-    problems = check_data(ROOT) + check_links(ROOT) + check_css(ROOT) + check_brand_link(ROOT) + check_league(ROOT) + check_external_links(ROOT)
+    problems = check_data(ROOT) + check_links(ROOT) + check_css(ROOT) + check_brand_link(ROOT) + check_league(ROOT) + check_external_links(ROOT) + check_nav_order(ROOT)
     for p in problems:
         print("PROBLEM:", p)
     print("OK" if not problems else f"{len(problems)} problem(s)")
