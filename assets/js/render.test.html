@@ -24,7 +24,16 @@ t("league skips links with non-https urls", () => {
   const h = R.renderLeague({ ...L, links: [{ label: "Bad", url: "javascript:alert(1)" }, { label: "Worse", url: "www.x.com" }, { label: "Good", url: "https://g.com" }] });
   ok(!h.includes("javascript") && !h.includes("www.x.com") && !h.includes(">Bad<") && h.includes('href="https://g.com"'), h);
 });
-t("league primary link is a green button", () => ok(R.renderLeague(L).includes('<a class="btn" href="https://y.com" rel="noopener">Watch live</a>'), "no btn"));
+t("league primary link is a green button", () => ok(R.renderLeague(L).includes('<a class="btn" href="https://y.com" target="_blank" rel="noopener">Watch live<span class="visually-hidden"> (opens in a new tab)</span></a>'), R.renderLeague(L)));
+t("league links all open in a new tab with noopener", () => {
+  const h = R.renderLeague(L);
+  const anchors = h.match(/<a [^>]*href="https:[^>]*>/g) || [];
+  ok(anchors.length === 2 && anchors.every((a) => a.includes('target="_blank"') && a.includes('rel="noopener"')), h);
+});
+t("league new-tab links tell screen readers", () => {
+  const h = R.renderLeague(L);
+  eq(h.split("(opens in a new tab)").length - 1, 2);
+});
 t("league logo has name fallback text", () => { const h = R.renderLeague(L); ok(h.includes("data-logo") && h.includes('class="visually-hidden">Foxx<'), h); });
 t("league with only name and season renders without undefined", () => { const h = R.renderLeague({ name: "N", season: "S" }); ok(h.includes("N") && !h.includes("undefined") && !h.includes("null") && !h.includes("<dl") && !h.includes("<ol"), h); });
 t("empty league object renders nothing", () => eq(R.renderLeague({}), ""));
