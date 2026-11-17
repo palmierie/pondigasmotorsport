@@ -1,7 +1,3 @@
 {
-  "sponsors": [
-    { "name": "Sponsor One (placeholder)", "tier": "Principal" },
-    { "name": "Sponsor Two (placeholder)", "url": "https://example.com", "tier": "Major" },
-    { "name": "Sponsor Three (placeholder)" }
-  ]
+  "sponsors": []
 }
