@@ -230,3 +230,7 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
 /* watch page hero: shorter banner with its own photo */
 .hero-watch { --hero-img: url("/assets/photos/watch-hero.jpg"); --hero-pos: center 62%; min-height: 62vh; min-height: 62svh; }
 .hero-watch .container { padding-bottom: 9vh; padding-top: 140px; }
+
+/* faint color lion, fixed bottom-right behind the pale pages (decorative; heroes and footer cover it) */
+body::before { content: ""; position: fixed; right: -5vw; bottom: -6vh; width: min(44vw, 640px); aspect-ratio: 1003 / 1210; background: url("/assets/brand/lion-color.svg") center / contain no-repeat; opacity: .09; z-index: -1; pointer-events: none; }
+@media (max-width: 720px) { body::before { width: 66vw; right: -16vw; bottom: 2vh; } }
