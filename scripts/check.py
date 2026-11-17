@@ -108,8 +108,34 @@ def check_links(root):
     return problems
 
 
+def check_css(root):
+    """Unbalanced braces make browsers silently drop the next rule."""
+    text = re.sub(r"/\*.*?\*/", "", (root / "assets/css/style.css").read_text(), flags=re.S)
+    depth = 0
+    for n, line in enumerate(text.splitlines(), 1):
+        depth += line.count("{") - line.count("}")
+        if depth < 0:
+            return [f"assets/css/style.css:{n}: unmatched '}}'"]
+    return [] if depth == 0 else [f"assets/css/style.css: {depth} unclosed '{{'"]
+
+
+def check_brand_link(root):
+    """The header logo link must have an accessible name in every header state."""
+    problems = []
+    for page in sorted(root.rglob("*.html")):
+        if any(part in (".superpowers", "docs") for part in page.relative_to(root).parts):
+            continue
+        text = page.read_text()
+        if 'class="site-header"' not in text:
+            continue
+        m = re.search(r'<a class="box brand"[^>]*>', text)
+        if not m or "aria-label=" not in m.group(0):
+            problems.append(f"{page.relative_to(root)}: header logo link needs aria-label")
+    return problems
+
+
 def main():
-    problems = check_data(ROOT) + check_links(ROOT)
+    problems = check_data(ROOT) + check_links(ROOT) + check_css(ROOT) + check_brand_link(ROOT)
     for p in problems:
         print("PROBLEM:", p)
     print("OK" if not problems else f"{len(problems)} problem(s)")

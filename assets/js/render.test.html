@@ -14,6 +14,32 @@ const eq = (a, b) => { if (a !== b) throw new Error(`expected ${JSON.stringify(b
 const ok = (c, m) => { if (!c) throw new Error(m); };
 const d = (s) => new Date(s + "T12:00:00");
 
+t("schedule renders an ordered list of rows", () => {
+  const h = R.renderSchedule({ races: [{ event: "A", venue: "V", date: "2027-02-01" }, { event: "B", venue: "V", date: "2027-03-01" }] }, d("2027-01-01"));
+  ok(h.includes('<ol class="rows">'), h);
+  eq(h.split('<li class="row box">').length - 1, 2);
+});
+t("row has date, title and venue spans in order", () => {
+  const h = R.renderSchedule({ races: [{ event: "Round 1", venue: "Road Atlanta", date: "2027-02-01" }] }, d("2027-01-01"));
+  const a = h.indexOf('<span class="row-date">'), b = h.indexOf('<span class="row-title">'), c = h.indexOf('<span class="row-venue">');
+  ok(a !== -1 && a < b && b < c, h);
+});
+t("result row omits meta when class and position are absent", () => {
+  const h = R.renderResults({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01" }] }] });
+  ok(!h.includes("row-meta") && !h.includes("row-notes") && !h.includes("undefined"), h);
+});
+t("result row shows meta joined by a middle dot", () => {
+  const h = R.renderResults({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01", class: "Class A", position: "P1" }] }] });
+  ok(h.includes('<span class="row-meta">Class A · P1</span>'), h);
+});
+t("next race renders a feature box", () => {
+  const h = R.renderNextRace({ races: [{ event: "Soon", venue: "V", date: "2027-02-01" }] }, d("2027-01-01"));
+  ok(h.includes('class="box feature"') && h.includes("Soon"), h);
+});
+t("sponsors render as cells", () => {
+  const h = R.renderSponsors({ sponsors: [{ name: "Acme" }] });
+  ok(h.includes('<ul class="cells">') && h.includes('<li class="cell box">'), h);
+});
 t("schedule shows start time as 12-hour clock", () => {
   const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "18:00" }] }, d("2027-01-01"));
   ok(h.includes("6:00 PM"), h);
@@ -38,7 +64,7 @@ t("race yesterday is excluded", () => ok(!R.renderSchedule({ races: [{ event: "O
 t("multi-day race still running is upcoming", () => ok(R.renderSchedule({ races: [{ event: "Long", venue: "V", date: "2026-12-31", endDate: "2027-01-02" }] }, d("2027-01-01")).includes("Long"), "missing"));
 t("schedule sorted ascending", () => {
   const h = R.renderSchedule({ races: [{ event: "B", venue: "V", date: "2027-06-01" }, { event: "A", venue: "V", date: "2027-02-01" }] }, d("2027-01-01"));
-  ok(h.indexOf("A") < h.indexOf("B") && h.indexOf(">A<") !== -1 || h.indexOf("A") < h.indexOf("B"), "order");
+  ok(h.indexOf(">A<") !== -1 && h.indexOf(">A<") < h.indexOf(">B<"), h);
 });
 t("missing optional fields never print undefined", () => {
   const h = R.renderResults({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01" }] }] });

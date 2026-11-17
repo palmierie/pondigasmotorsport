@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,30 +17,33 @@
 <script type="module" src="/assets/js/main.js"></script>
 </head>
 <body>
-<header class="site-header"><div class="container">
-<a class="brand" href="/"><img src="/assets/brand/pon-di-gas-horizontal-nocircle-light.svg" alt="Pon Di Gas Motorsport" width="827" height="340"></a>
-<button class="nav-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
-<nav class="nav" id="nav" aria-label="Main"><ul><li><a href="/" aria-current="page">Home</a></li><li><a href="/results/">Results</a></li><li><a href="/schedule/">Schedule</a></li><li><a href="/sponsors/">Sponsors</a></li><li><a href="/team/">Team</a></li><li><a href="/contact/">Contact</a></li></ul></nav>
-</div></header>
+<header class="site-header">
+<a class="box brand" href="/" aria-label="Pon Di Gas Motorsport"><img class="logo-on-photo" src="/assets/brand/pon-di-gas-horizontal-nocircle-dark.svg" alt="" width="827" height="340"><img class="logo-on-paper" src="/assets/brand/pon-di-gas-horizontal-nocircle-light.svg" alt="" width="827" height="340"></a>
+<button class="box nav-toggle" aria-expanded="false" aria-controls="nav">Menu</button>
+<nav class="nav" id="nav" aria-label="Main"><ul><li><a class="box" href="/" aria-current="page">Home</a></li><li><a class="box" href="/results/">Results</a></li><li><a class="box" href="/schedule/">Schedule</a></li><li><a class="box" href="/sponsors/">Sponsors</a></li><li><a class="box" href="/team/">Team</a></li><li><a class="box" href="/contact/">Contact</a></li></ul></nav>
+</header>
 <main>
 
 <section class="hero"><div class="container">
-<img class="hero-emblem" src="/assets/brand/emblem-lion-rajdhani.svg" alt="" width="400" height="400">
 <h1>Built to race.</h1>
 <p>Follow the team through the season: results, upcoming rounds and the partners who make it happen.</p>
 <a class="btn" href="/schedule/">See the schedule</a>
 </div></section>
-<section class="block"><div class="container two-col">
-<div><h2>Who we are</h2><p class="lead">Placeholder: a short paragraph about the team, its history and what it races. Replace with real copy.</p></div>
-<div><h2>Next race</h2><div data-render="next-race"><p class="empty">Loading…</p></div></div>
+<section class="block"><div class="container split">
+<h2>Who we are</h2>
+<div><p class="lead">Placeholder: a short paragraph about the team, its history and what it races. Replace with real copy.</p></div>
 </div></section>
-<section class="block alt"><div class="container">
-<h2>Latest result</h2><div data-render="latest-result"><p class="empty">Loading…</p></div>
-<p><a href="/results/">All results &rarr;</a></p>
+<section class="block"><div class="container split">
+<h2>Next race</h2>
+<div><div data-render="next-race"><p class="empty">Loading…</p></div><p><a href="/schedule/">Full schedule &rarr;</a></p></div>
 </div></section>
-<section class="block"><div class="container">
-<h2>Our partners</h2><div data-render="sponsors"><p class="empty">Loading…</p></div>
-<p><a href="/sponsors/">Become a partner &rarr;</a></p>
+<section class="block"><div class="container split">
+<h2>Latest result</h2>
+<div><div data-render="latest-result"><p class="empty">Loading…</p></div><p><a href="/results/">All results &rarr;</a></p></div>
+</div></section>
+<section class="block"><div class="container split">
+<h2>Our partners</h2>
+<div><div data-render="sponsors"><p class="empty">Loading…</p></div><p><a href="/sponsors/">Become a partner &rarr;</a></p></div>
 </div></section>
 </main>
 <footer class="site-footer"><div class="container">
@@ -51,5 +54,6 @@
 </div>
 <p class="footer-note">&copy; Pon Di Gas Motorsport</p>
 </div></footer>
+<a class="btn fab" href="https://www.instagram.com/evido__" rel="noopener">Follow us on Instagram &rarr;</a>
 </body>
 </html>

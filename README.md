@@ -33,6 +33,10 @@ Edit the JSON files in `data/`, then run `scripts/check.py` before pushing. Date
 ```
 Without a `logo`, the name is shown as text.
 
+## Styling
+
+All styling is in `assets/css/style.css`. Colors and fonts are tokens at the top (`:root`): `--page`, `--ink`, `--green`, `--gold`, `--lion-red`, `--font-heading` (Rajdhani) and `--font-body`. The hero photo is `--hero-img`. Outlined boxes with corner dots use the `.box` class; the schedule and results lists are `.rows`; sponsors are `.cells`.
+
 ## Placeholders to replace
 
 - Hero copy and "Who we are" text
