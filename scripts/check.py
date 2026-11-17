@@ -143,6 +143,32 @@ def check_league(root):
     return problems
 
 
+class _Anchors(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.anchors = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            self.anchors.append(dict(attrs))
+
+
+def check_external_links(root):
+    """External links in pages open in a new tab, safely."""
+    problems = []
+    for page in sorted(root.rglob("*.html")):
+        if any(part in (".superpowers", "docs") for part in page.relative_to(root).parts):
+            continue
+        p = _Anchors()
+        p.feed(page.read_text())
+        for a in p.anchors:
+            href = a.get("href") or ""
+            if href.startswith(("http://", "https://")):
+                if a.get("target") != "_blank" or "noopener" not in (a.get("rel") or ""):
+                    problems.append(f"{page.relative_to(root)}: external link {href} needs target=\"_blank\" and rel=\"noopener\"")
+    return problems
+
+
 def check_css(root):
     """Unbalanced braces make browsers silently drop the next rule."""
     text = re.sub(r"/\*.*?\*/", "", (root / "assets/css/style.css").read_text(), flags=re.S)
@@ -170,7 +196,7 @@ def check_brand_link(root):
 
 
 def main():
-    problems = check_data(ROOT) + check_links(ROOT) + check_css(ROOT) + check_brand_link(ROOT) + check_league(ROOT)
+    problems = check_data(ROOT) + check_links(ROOT) + check_css(ROOT) + check_brand_link(ROOT) + check_league(ROOT) + check_external_links(ROOT)
     for p in problems:
         print("PROBLEM:", p)
     print("OK" if not problems else f"{len(problems)} problem(s)")
