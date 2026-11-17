@@ -67,7 +67,7 @@ The Foxxtecca and Apex Racing logos, and the track logos in `assets/tracks/`, be
 
 ## Styling
 
-All styling is in `assets/css/style.css`. Colors and fonts are tokens at the top (`:root`): `--page`, `--ink`, `--green`, `--gold`, `--lion-red`, `--font-heading` (Rajdhani) and `--font-body`. The hero photo is `--hero-img`. Outlined boxes with corner dots use the `.box` class; the schedule and results lists are `.rows`; sponsors are `.cells`.
+All styling is in `assets/css/style.css`. Colors and fonts are tokens at the top (`:root`): `--page`, `--ink`, `--green`, `--gold`, `--lion-red`, `--font-heading` (Rajdhani) and `--font-body`. The home hero photo is `--hero-img`; the Watch page banner sets its own `--hero-img` and `--hero-pos` on `.hero-watch`. Outlined boxes with corner dots use the `.box` class; the schedule and results lists are `.rows`; sponsors are `.cells`.
 
 ## Placeholders to replace
 
