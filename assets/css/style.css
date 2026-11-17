@@ -121,7 +121,7 @@ section h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); margin: 0 0 24px; }
 .contact-link { display: inline-block; padding: 14px 22px; font-family: var(--font-heading); font-weight: 600; font-size: 1.3rem; }
 .contact-link:hover { background: var(--ink); color: var(--page); }
 .photo-slot { aspect-ratio: 4/5; background: #d0dbe4; border-radius: 0; margin-bottom: 16px; overflow: hidden; }
-.photo-slot img { width: 100%; height: 100%; object-fit: cover; }
+.photo-slot img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
 
 /* footer */
 .site-footer { background: var(--black); color: #c9cdd2; padding: 56px 0 120px; margin-top: 0; }
