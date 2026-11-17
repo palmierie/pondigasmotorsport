@@ -37,6 +37,31 @@ t("league new-tab links tell screen readers", () => {
 t("league logo has name fallback text", () => { const h = R.renderLeague(L); ok(h.includes("data-logo") && h.includes('class="visually-hidden">Foxx<'), h); });
 t("league with only name and season renders without undefined", () => { const h = R.renderLeague({ name: "N", season: "S" }); ok(h.includes("N") && !h.includes("undefined") && !h.includes("null") && !h.includes("<dl") && !h.includes("<ol"), h); });
 t("empty league object renders nothing", () => eq(R.renderLeague({}), ""));
+const LG = "/assets/tracks/road-atlanta.webp";
+t("schedule row with logo renders a logo tile", () => {
+  const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-02-01", logo: LG }] }, d("2027-01-01"));
+  ok(h.includes('<li class="row box has-logo"><span class="row-logo"><img src="' + LG + '" alt="" data-logo></span>'), h);
+});
+t("schedule row without logo renders no tile", () => {
+  const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-02-01" }] }, d("2027-01-01"));
+  ok(!h.includes("row-logo") && !h.includes("has-logo") && h.includes('<li class="row box">') && !h.includes("undefined"), h);
+});
+t("logo path is escaped in the attribute", () => {
+  const h = R.renderSchedule({ races: [{ event: "R1", venue: "V", date: "2027-02-01", logo: '/x.webp" onerror="alert(1)<b>' }] }, d("2027-01-01"));
+  ok(!h.includes('" onerror="') && !h.includes("<b>"), h);
+});
+t("next race feature shows the logo tile", () => {
+  const h = R.renderNextRace({ races: [{ event: "R1", venue: "V", date: "2027-02-01", logo: LG }] }, d("2027-01-01"));
+  ok(h.includes('class="box feature has-logo"') && h.includes('<span class="row-logo">'), h);
+});
+t("results rows never get a tile", () => {
+  const h = R.renderResults({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01", logo: LG }] }] });
+  ok(!h.includes("row-logo") && !h.includes("has-logo"), h);
+});
+t("latest result never gets a tile", () => {
+  const h = R.renderLatestResult({ seasons: [{ year: 2026, races: [{ event: "E", venue: "V", date: "2026-03-01", logo: LG }] }] });
+  ok(!h.includes("row-logo") && !h.includes("has-logo"), h);
+});
 t("schedule row shows label, time and zone", () => {
   const h = R.renderSchedule({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "19:10" }] }, d("2027-01-01"));
   ok(h.includes("Tue, Jan 5, 2027 · Race 7:10 PM ET"), h);

@@ -45,7 +45,7 @@ function upcoming(data, today) {
 }
 
 // Inner spans shared by schedule rows, result rows and feature boxes.
-function raceSpans(r, { result = false, timeLabel = "", timeZone = "" } = {}) {
+function raceSpans(r, { result = false, timeLabel = "", timeZone = "", logo = false } = {}) {
   // Label and zone only make sense next to a real time: "Race 7:10 PM ET".
   const time = formatTime(r.time);
   const timeText = time ? [timeLabel, time, timeZone].filter(Boolean).join(" ") : "";
@@ -53,6 +53,8 @@ function raceSpans(r, { result = false, timeLabel = "", timeZone = "" } = {}) {
   const title = r.link ? `<a href="${e(r.link)}" rel="noopener">${e(r.event)}</a>` : e(r.event);
   const meta = [r.class, r.position].filter(Boolean).map(e).join(" · ");
   return (
+    // Track logo tile: schedule rows and the Next Race box only (opted in via `logo`).
+    (logo && r.logo ? `<span class="row-logo"><img src="${e(r.logo)}" alt="" data-logo></span>` : "") +
     (r.photo ? `<img class="row-photo" src="${e(r.photo)}" alt="${e(r.event)}" loading="lazy">` : "") +
     `<span class="row-date">${e(dateText)}</span>` +
     `<span class="row-title">${title}</span>` +
@@ -62,8 +64,9 @@ function raceSpans(r, { result = false, timeLabel = "", timeZone = "" } = {}) {
   );
 }
 
-const row = (r, opts) => `<li class="row box">${raceSpans(r, opts)}</li>`;
-const feature = (r, opts) => `<div class="box feature">${raceSpans(r, opts)}</div>`;
+const withLogo = (r, opts = {}) => (opts.logo && r.logo ? " has-logo" : "");
+const row = (r, opts) => `<li class="row box${withLogo(r, opts)}">${raceSpans(r, opts)}</li>`;
+const feature = (r, opts) => `<div class="box feature${withLogo(r, opts)}">${raceSpans(r, opts)}</div>`;
 
 export function renderResults(data) {
   const seasons = [...(data.seasons || [])].sort((a, b) => b.year - a.year);
@@ -80,14 +83,14 @@ export function renderResults(data) {
 export function renderSchedule(data, today) {
   const races = upcoming(data, today);
   if (!races.length) return empty("No upcoming races.");
-  const opts = { timeLabel: data.timeLabel, timeZone: data.timeZone };
+  const opts = { timeLabel: data.timeLabel, timeZone: data.timeZone, logo: true };
   return `<ol class="rows">${races.map((r) => row(r, opts)).join("")}</ol>`;
 }
 
 export function renderNextRace(data, today) {
   const [next] = upcoming(data, today);
   if (!next) return empty("No upcoming races.");
-  return feature(next, { timeLabel: data.timeLabel, timeZone: data.timeZone });
+  return feature(next, { timeLabel: data.timeLabel, timeZone: data.timeZone, logo: true });
 }
 
 export function renderLatestResult(data) {
