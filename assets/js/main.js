@@ -6,6 +6,7 @@ const sections = {
   "next-race": (d) => R.renderNextRace(d, new Date()),
   "latest-result": (d) => R.renderLatestResult(d),
   sponsors: (d) => R.renderSponsors(d),
+  league: (d) => R.renderLeague(d),
 };
 
 const source = {
@@ -14,6 +15,7 @@ const source = {
   "next-race": "schedule",
   "latest-result": "results",
   sponsors: "sponsors",
+  league: "league",
 };
 
 const cache = {};
