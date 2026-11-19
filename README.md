@@ -75,6 +75,20 @@ Read the README. I'm starting <league name, season, class, division>. Update dat
 - To add a photo to a result, put the file in `assets/photos/` (lowercase, no spaces) and give Claude the filename.
 - After the site goes live, browsers can cache files for about 10 minutes. If a page looks wrong, do a hard refresh (Cmd+Shift+R on Mac, Ctrl+Shift+R on Windows).
 
+## Home hero video
+
+The home page hero plays a muted, looping video over the photo (`--hero-img`, which stays as the fallback). `assets/js/hero-video.js` picks the file: `assets/video/hero-720p.mp4` on phones, `hero-1080p.mp4` by default, and `hero-1440p.mp4` on big monitors (1600px wide or more) and retina laptops. Visitors who ask their device for reduced motion or data saving get the photo and download no video. The video also pauses while the hero is off screen.
+
+To use a different clip, make three muted MP4s with ffmpeg and replace the files (keep the names). Put your source clips in `assets/video/candidates/`: that folder is git-ignored, so test files never get committed. Aim for about 1.5 MB (720p), 3 MB (1080p) and 4.5 MB (1440p) for a 14-second clip.
+
+```bash
+ffmpeg -i source-1440p.mp4 -an -c:v libx264 -preset slow -crf 28 -profile:v high -level 5.0 -pix_fmt yuv420p -movflags +faststart hero-1440p.mp4
+ffmpeg -i source-1080p.mp4 -an -c:v libx264 -preset slow -crf 28 -profile:v high -pix_fmt yuv420p -movflags +faststart hero-1080p.mp4
+ffmpeg -i source-1080p.mp4 -an -vf scale=1280:-2 -c:v libx264 -preset slow -crf 28 -profile:v high -pix_fmt yuv420p -movflags +faststart hero-720p.mp4
+```
+
+A higher `-crf` number gives a smaller, softer file. WebM was tested and was not smaller than these MP4s at the same quality, so it is not used.
+
 ## Watch page
 
 `watch/index.html` has one card per YouTube channel (Foxxtecca, Apex Racing TV, Eric Palmieri). To add or change a channel, copy one `<li>` in the `watch-grid` list and edit its link, name and description. Keep `target="_blank" rel="noopener"` on external links; `scripts/check.py` reports any that are missing. The nav and footer link to `/watch/` on every page.

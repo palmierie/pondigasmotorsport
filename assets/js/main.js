@@ -1,4 +1,5 @@
 import * as R from "./render.js";
+import { pickHeroVideo } from "./hero-video.js";
 
 const sections = {
   results: (d) => R.renderResults(d),
@@ -68,3 +69,23 @@ document.addEventListener(
   },
   true
 );
+
+// Home hero video: muted looping background. The photo shows until it plays, and stays for visitors
+// who asked for reduced motion or data saving. File choice (phone / default / large screens): hero-video.js
+const heroVideo = document.querySelector(".hero-video");
+if (heroVideo) {
+  const hero = heroVideo.closest(".hero");
+  const src = pickHeroVideo({
+    reduceMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    saveData: !!(navigator.connection && navigator.connection.saveData),
+    viewportWidth: window.innerWidth,
+    pixelRatio: window.devicePixelRatio || 1,
+  });
+  if (src) {
+    heroVideo.src = src;
+    heroVideo.addEventListener("playing", () => hero.classList.add("video-on"), { once: true });
+    heroVideo.play().catch(() => {});
+    // Pause while the hero is off screen to save battery and data.
+    new IntersectionObserver(([entry]) => (entry.isIntersecting ? heroVideo.play().catch(() => {}) : heroVideo.pause())).observe(hero);
+  }
+}
