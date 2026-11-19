@@ -109,7 +109,7 @@ The Foxxtecca and Apex Racing logos, and the track logos in `assets/tracks/`, be
 
 ## Styling
 
-All styling is in `assets/css/style.css`. Colors and fonts are tokens at the top (`:root`): `--page`, `--ink`, `--green`, `--gold`, `--lion-red`, `--font-heading` (Rajdhani) and `--font-body`. The home hero photo is `--hero-img`; the Watch page banner sets its own `--hero-img` and `--hero-pos` on `.hero-watch`. The faint white lion on the home hero is `.hero-lion` (`assets/brand/lion-white.svg`); its size, position and opacity are set there. A faint color lion (`assets/brand/lion-color.svg`) sits bottom-right behind every page, set by `body::before` at the end of `assets/css/style.css`; the heroes and footer cover it, and its opacity is `.09`. Outlined boxes with corner dots use the `.box` class; the schedule and results lists are `.rows`; sponsors are `.cells`.
+All styling is in `assets/css/style.css`. Colors and fonts are tokens at the top (`:root`): `--page`, `--ink`, `--green`, `--gold`, `--lion-red`, `--font-heading` (Rajdhani) and `--font-body`. The home hero photo is `--hero-img`; the banner on every other page (Watch, Results, Schedule, Sponsors, Team, Contact) sets its own `--hero-img` and `--hero-pos` on `.hero-page`. The faint white lion on the home hero is `.hero-lion` (`assets/brand/lion-white.svg`); its size, position and opacity are set there. A faint color lion (`assets/brand/lion-color.svg`) sits bottom-right behind every page, set by `body::before` at the end of `assets/css/style.css`; the heroes and footer cover it, and its opacity is `.09`. Outlined boxes with corner dots use the `.box` class; the schedule and results lists are `.rows`; sponsors are `.cells`.
 
 ## Placeholders to replace
 
