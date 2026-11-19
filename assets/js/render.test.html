@@ -4,6 +4,7 @@
 <pre id="out">running…</pre>
 <script type="module">
 import * as R from "./render.js";
+import { pickHeroVideo } from "./hero-video.js";
 const out = [];
 let failed = 0;
 function t(name, fn) {
@@ -111,6 +112,15 @@ t("watch button is not nested inside the title link", () => {
   const start = h.indexOf('<a href="https://r.com"'), end = h.indexOf("</a>", start);
   ok(start !== -1 && !h.slice(start, end).includes("watch-btn") && h.includes("watch-btn"), h);
 });
+const env = (o) => ({ reduceMotion: false, saveData: false, viewportWidth: 1280, pixelRatio: 1, ...o });
+t("hero video: reduced motion gets no video", () => eq(pickHeroVideo(env({ reduceMotion: true })), null));
+t("hero video: data saver gets no video", () => eq(pickHeroVideo(env({ saveData: true })), null));
+t("hero video: phones get 720p even on high-density screens", () => eq(pickHeroVideo(env({ viewportWidth: 390, pixelRatio: 3 })), "/assets/video/hero-720p.mp4"));
+t("hero video: laptops get 1080p", () => eq(pickHeroVideo(env({ viewportWidth: 1280, pixelRatio: 1 })), "/assets/video/hero-1080p.mp4"));
+t("hero video: retina laptops get 1440p", () => eq(pickHeroVideo(env({ viewportWidth: 1440, pixelRatio: 2 })), "/assets/video/hero-1440p.mp4"));
+t("hero video: big monitors get 1440p", () => eq(pickHeroVideo(env({ viewportWidth: 1920, pixelRatio: 1 })), "/assets/video/hero-1440p.mp4"));
+t("hero video: tablets get 1080p", () => eq(pickHeroVideo(env({ viewportWidth: 820, pixelRatio: 2 })), "/assets/video/hero-1080p.mp4"));
+t("hero video: 720px is a phone and 721px is not", () => { eq(pickHeroVideo(env({ viewportWidth: 720 })), "/assets/video/hero-720p.mp4"); eq(pickHeroVideo(env({ viewportWidth: 721 })), "/assets/video/hero-1080p.mp4"); });
 t("schedule row shows label, time and zone", () => {
   const h = R.renderSchedule({ timeLabel: "Race", timeZone: "ET", races: [{ event: "R1", venue: "V", date: "2027-01-05", time: "19:10" }] }, d("2027-01-01"));
   ok(h.includes("Tue, Jan 5, 2027 · Race 7:10 PM ET"), h);

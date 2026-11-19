@@ -63,7 +63,11 @@ body.scrolled .logo-on-paper { display: block; }
 .hero { overflow: hidden; }
 .hero .container { position: relative; z-index: 1; padding-bottom: 12vh; }
 /* big white lion watermark on the right of the home hero (decorative) */
-.hero-lion { position: absolute; right: -2%; bottom: 3%; height: 74%; width: auto; max-width: none; opacity: .2; pointer-events: none; }
+.hero-lion { position: absolute; right: -2%; bottom: 3%; height: 74%; width: auto; max-width: none; opacity: .2; pointer-events: none; z-index: 1; }
+/* home hero video: fades in over the photo once it plays; the darkening overlay moves above it */
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 60%; opacity: 0; transition: opacity .6s ease; pointer-events: none; z-index: 0; }
+.hero.video-on .hero-video { opacity: 1; }
+.hero.video-on::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(to bottom, rgba(0,0,0,.68) 0%, rgba(0,0,0,.4) 30%, rgba(0,0,0,.4) 55%, rgba(0,0,0,.72) 100%); }
 .hero h1 { font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: 1.02; margin: 0 0 16px; max-width: 14ch; }
 .hero p { font-size: 1.2rem; max-width: 52ch; margin: 0 0 28px; opacity: .95; }
 
